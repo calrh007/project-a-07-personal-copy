@@ -13,3 +13,6 @@ class DummyTestCase(TestCase):
     def test_addition_1(self):
         one_plus_two = self.one + self.two 
         self.assertEqual(one_plus_two, self.three, "failed 1 + 2 addition")
+    def test_multiplication_0(self):
+        one_times_one = self.one * self.one
+        self.assertEqual(one_times_one, self.one, "failed 1 * 1 multiplication")
