@@ -9,12 +9,11 @@ def index(request):
 
 class AddWorkoutView(CreateView):
     model = Workout
+    from_class = WorkoutForm
     template_name = 'workout_app/add_workout.html'
     fields = '__all__'
 
 class WorkoutListView(CreateView):
     model = Workout
-    from_class = WorkoutForm
     template_name = 'workout_app/workout_list.html'
-    template_name = 'add_workout.html'
     fields = '__all__'

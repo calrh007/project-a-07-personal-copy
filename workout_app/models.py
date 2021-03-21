@@ -13,7 +13,7 @@ class Workout(models.Model):
     profile = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "type: " + self.type + " | duration: " + self.duration + " | intensity: " + self.duration +  " | steps: " + self.steps + " | miles: " + self.miles
+        return "type: " + self.type
     def get_absolute_url(self):
         return reverse('workout_list')
 
