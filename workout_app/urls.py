@@ -14,4 +14,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view()),
     path('add_workout/', AddWorkoutView.as_view(), name='add_workout'),
     path('add_workout/workout_list', WorkoutListView.as_view(), name='workout_list'),
+
 ]

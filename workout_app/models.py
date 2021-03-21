@@ -16,3 +16,4 @@ class Workout(models.Model):
         return "type: " + self.type + " | duration: " + self.duration + " | intensity: " + self.duration +  " | steps: " + self.steps + " | miles: " + self.miles
     def get_absolute_url(self):
         return reverse('workout_list')
+
