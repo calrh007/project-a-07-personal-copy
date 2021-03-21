@@ -5,11 +5,11 @@
 {% if object_list %}
     <ul>
     {% for workout in object_list %}
-        <h2 style="color: black">{{ workout.type }}</h2>
-        <p style="color: black">{{ workout.duration }}</p>
-        <p style="color: black">{{ workout.intensity }}</p>
-        <p style="color: black">{{ workout.steps }}</p>
-        <p style="color: black">{{ workout.miles }}</p>
+        <h2 style="color: black">Type: {{ workout.type }}</h2>
+        <p style="color: black">Duration: {{ workout.duration }}</p>
+        <p style="color: black">Intensity: {{ workout.intensity }}</p>
+        <p style="color: black">Steps: {{ workout.steps }}</p>
+        <p style="color: black">Miles: {{ workout.miles }}</p>
         <p style="color: black">{{ workout.profile }}</p>
     {% endfor %}
     </ul>

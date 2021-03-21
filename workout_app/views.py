@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.views.generic import CreateView
+from django.views import generic
+from django.views.generic import CreateView, ListView
 from .models import Workout
 from .forms import WorkoutForm
 
@@ -13,7 +14,8 @@ class AddWorkoutView(CreateView):
     template_name = 'workout_app/add_workout.html'
     fields = '__all__'
 
-class WorkoutListView(CreateView):
+class WorkoutListView(generic.ListView):
     model = Workout
+    object_list = Workout.objects.all()
     template_name = 'workout_app/workout_list.html'
     fields = '__all__'
