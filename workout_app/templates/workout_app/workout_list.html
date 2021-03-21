@@ -1,0 +1,21 @@
+{% extends "workout_app/base.html" %}
+
+{% block content %}
+<div class="col text-center">
+{% if object_list %}
+    <ul>
+    {% for workout in object_list %}
+        <h2 style="color: black">{{ workout.type }}</h2>
+        <p style="color: black">{{ workout.duration }}</p>
+        <p style="color: black">{{ workout.intensity }}</p>
+        <p style="color: black">{{ workout.steps }}</p>
+        <p style="color: black">{{ workout.miles }}</p>
+        <p style="color: black">{{ workout.profile }}</p>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No workouts are available.</p>
+{% endif %}
+</html>
+</div>
+{% endblock %}
