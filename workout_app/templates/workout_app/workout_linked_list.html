@@ -1,0 +1,40 @@
+{% extends "workout_app/base.html" %}
+
+{% block content %}
+<div class="col text-center">
+{% if user_workouts %}
+    <ul>
+    {% for workout_linked in user_workouts %}
+        <h2 style="color: black">{{ workout_linked.workoutType }}</h2>
+        <p style="color: black">{{ workout_linked.start_date }}
+        {% if not workout_linked.one_day %}
+            - {{workout_linked.end_date}}
+        {% endif %}
+        </p>
+        {% if workout_linked.workoutType.has_intensity %}
+            <p style="color: black">Intensity: {{ workout_linked.get_intensity_display }}</p>
+        {% endif %}
+        {% if workout_linked.workoutType.has_distance_comp %}
+            <p style="color: black">Distance: {{ workout_linked.dist }}</p>
+        {% endif %}
+        {% if workout_linked.workoutType.has_first_count_component %}
+            <p style="color: black">{{workout_linked.workoutType.first_count_component}}: {{ workout_linked.raw_count }}</p>
+        {% endif %}
+        {% if workout_linked.workoutType.has_second_count_component %}
+            <p style="color: black">{{workout_linked.workoutType.second_count_component}}: {{ workout_linked.second_raw_count }}</p>
+        {% endif %}
+        {% if workout_linked.workoutType.has_set_rep_comp %}
+            <p style="color: black">Sets: {{ workout_linked.raw_set }}</p>
+            <p style="color: black">Reps: {{ workout_linked.raw_rep }}</p>
+        {% endif %}
+        {% if workout_linked.workoutType.has_weight_comp %}
+            <p style="color: black">Weight: {{ workout_linked.weight }}</p>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No workouts are available.</p>
+{% endif %}
+</html>
+</div>
+{% endblock %}

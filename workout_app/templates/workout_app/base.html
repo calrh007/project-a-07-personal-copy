@@ -35,20 +35,39 @@
               </li>
 
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'add_workout' %}">Add Workout</a>
+                <a class="nav-link" href="{% url 'add_workout_type_count' %}">Add Workout Type Count</a>
               </li>
 
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'workout_list' %}">My Workouts</a>
+                <a class="nav-link" href="{% url 'add_workout_type' %}">Add Workout Type</a>
               </li>
 
               <li class="nav-item">
-                <a class="nav-link" href="/login">Login & Account</a>
+                <a class="nav-link" href="{% url 'add_workout_linked' %}">Add Workout</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'workout_linked_list' %}">My Workouts</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Login & Account</a>
               </li>
             </ul>
           </div>
         </div>
       </nav>
+
+    {% for message in messages %}
+    <div class="container-fluid p-0">
+      <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+      </div>
+    </div>
+    {% endfor %}
 
     {% block content %}{% endblock %}
 
