@@ -2,34 +2,41 @@
 
 {% block content %}
 <div class="col text-center">
+    <h1 style="padding:15px">My Workouts</h1>
 {% if user_workouts %}
     <ul>
     {% for workout_linked in user_workouts %}
-        <h2 style="color: black">{{ workout_linked.workoutType }}</h2>
-        <p style="color: black">{{ workout_linked.start_date }}
-        {% if not workout_linked.one_day %}
-            - {{workout_linked.end_date}}
-        {% endif %}
-        </p>
-        {% if workout_linked.workoutType.has_intensity %}
-            <p style="color: black">Intensity: {{ workout_linked.get_intensity_display }}</p>
-        {% endif %}
-        {% if workout_linked.workoutType.has_distance_comp %}
-            <p style="color: black">Distance: {{ workout_linked.dist }}</p>
-        {% endif %}
-        {% if workout_linked.workoutType.has_first_count_component %}
-            <p style="color: black">{{workout_linked.workoutType.first_count_component}}: {{ workout_linked.raw_count }}</p>
-        {% endif %}
-        {% if workout_linked.workoutType.has_second_count_component %}
-            <p style="color: black">{{workout_linked.workoutType.second_count_component}}: {{ workout_linked.second_raw_count }}</p>
-        {% endif %}
-        {% if workout_linked.workoutType.has_set_rep_comp %}
-            <p style="color: black">Sets: {{ workout_linked.raw_set }}</p>
-            <p style="color: black">Reps: {{ workout_linked.raw_rep }}</p>
-        {% endif %}
-        {% if workout_linked.workoutType.has_weight_comp %}
-            <p style="color: black">Weight: {{ workout_linked.weight }}</p>
-        {% endif %}
+        <div class="card mx-auto mb-3" style="width:38%">
+            <div class="card-header">
+                <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">{{ workout_linked.workoutType }} </span>
+                <span style="float:right; font-weight:lighter; font-size:15px"><em>{{ workout_linked.start_date }}
+                {% if not workout_linked.one_day %}
+                    - {{workout_linked.end_date}}
+                {% endif %}
+                </em></span></h2>
+            </div>
+            <div class="card-body" style="text-align:left">
+                {% if workout_linked.workoutType.has_intensity %}
+                    <p style="color: black"><b>Intensity:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.get_intensity_display }}</span></p>
+                {% endif %}
+                {% if workout_linked.workoutType.has_distance_comp %}
+                    <p style="color: black"><b>Distance:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.dist }}</span></p>
+                {% endif %}
+                {% if workout_linked.workoutType.has_first_count_component %}
+                    <p style="color: black"><b>{{workout_linked.workoutType.first_count_component}}:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.raw_count }}</span></p>
+                {% endif %}
+                {% if workout_linked.workoutType.has_second_count_component %}
+                    <p style="color: black"><b>{{workout_linked.workoutType.second_count_component}}:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.second_raw_count }}</span></p>
+                {% endif %}
+                {% if workout_linked.workoutType.has_set_rep_comp %}
+                    <p style="color: black"><b>Sets:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.raw_set }}</span></p>
+                    <p style="color: black"><b>Reps:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.raw_rep }}</span></p>
+                {% endif %}
+                {% if workout_linked.workoutType.has_weight_comp %}
+                    <p style="color: black"><b>Weight:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.weight }}</span></p>
+                {% endif %}
+            </div>
+        </div>
     {% endfor %}
     </ul>
 {% else %}
