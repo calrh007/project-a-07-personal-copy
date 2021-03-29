@@ -1,14 +1,18 @@
 {% extends "workout_app/base.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
 
 <h1 style="text-align:center; padding:15px">Add Workout</h1>
-<div class="col text-center">
+<div class="mx-auto" style="width:40%">
   <form action="" method="post">
       {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" name="Upload Workout">Upload Workout</button>
-        <button type="reset" name="Reset">Reset</button>
+        {{ form|crispy }}
+        <div class="text-right">
+          <button type="submit" name="Upload Workout">Upload Workout</button>
+          <button type="reset" name="Reset">Reset</button>
+        </div>
   </form>
 </div>
 
