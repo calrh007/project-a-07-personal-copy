@@ -2,6 +2,7 @@ from django.test import TestCase
 
 # Create your tests here.
 
+"""
 class DummyTestCase(TestCase):
     def setUp(self):
         self.one = 1
@@ -19,3 +20,5 @@ class DummyTestCase(TestCase):
     def test_multiplication_1(self):
         one_times_two = self.one * self.two
         self.assertEqual(one_times_two, self.two, "failed 1 * 2 multiplication")
+"""
+
