@@ -1,0 +1,19 @@
+{% extends "workout_app/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h1 style="text-align:center; padding:15px">Edit Workout</h1>
+<div class="mx-auto" style="width:40%">
+  <form action="" method="post">
+      {% csrf_token %}
+        {{ form|crispy }}
+        <div class="text-right">
+          <button type="submit" name="Update Workout">Update Workout</button>
+          <button type="reset" name="Reset">Reset</button>
+        </div>
+  </form>
+</div>
+
+{% endblock %}
