@@ -32,6 +32,11 @@ def workoutLinkedListView(request):
         messages.error(request, LE)
         return HttpResponseRedirect('/login/')
     user_workouts = WorkoutLinked.objects.filter(profile=request.user)
+
+    if (request.GET.get('DeleteButton')):
+        WorkoutLinked.objects.filter(id=request.GET.get('DeleteButton')).delete()
+        return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
+
     return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
 
 def newWorkoutType(request):

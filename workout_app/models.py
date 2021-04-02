@@ -50,6 +50,7 @@ INTENSITY_CHOICES = (
     ('NA', 'Not Applicable')
 )
 
+
 class WorkoutLinked(models.Model):
     workoutType = models.ForeignKey(WorkoutType, on_delete=models.CASCADE)
     profile = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -63,17 +64,18 @@ class WorkoutLinked(models.Model):
     )
     dist = MeasurementField(
         default=0,
-        measurement=Distance, 
+        measurement=Distance,
         unit_choices=(("mi", "mi"), ("km", "km"), ("ft", "ft"), ("m", "m"))
     )
-    raw_count = models.IntegerField(default = 0)
-    second_raw_count = models.IntegerField(default = 0)
-    raw_set = models.IntegerField(default = 0)
-    raw_rep = models.IntegerField(default = 0)
+
+    raw_count = models.PositiveIntegerField(default = 0)
+    second_raw_count = models.PositiveIntegerField(default = 0)
+    raw_set = models.PositiveIntegerField(default = 0)
+    raw_rep = models.PositiveIntegerField(default = 0)
     weight = MeasurementField(
         null=True,
         blank=True,
         default=0,
-        measurement=Weight, 
+        measurement=Weight,
         unit_choices=(("lb", "lb"), ("kg", "kg"))
     )

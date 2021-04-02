@@ -161,7 +161,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-#SITE_ID = 1
+# SITE_ID = 1
 LOGIN_REDIRECT_URL = '/login'
 LOGOUT_REDIRECT_URL = '/login'
 

@@ -35,6 +35,12 @@
                 {% if workout_linked.workoutType.has_weight_comp %}
                     <p style="color: black"><b>Weight:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.weight }}</span></p>
                 {% endif %}
+
+
+                <form action="" method="get">
+                    <button class = "btn btn-default" name="DeleteButton" value="{{ workout_linked.id }}">Delete</button>
+                </form>
+
             </div>
         </div>
     {% endfor %}
