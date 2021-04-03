@@ -29,17 +29,9 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ml-auto align-items-center">
               <li class="nav-item">
                 <a class="nav-link" href="/">Home</a>
-              </li>
-
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'add_workout_type_count' %}">Add Workout Type Count</a>
-              </li>
-
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'add_workout_type' %}">Add Workout Type</a>
               </li>
 
               <li class="nav-item">
@@ -51,7 +43,7 @@
               </li>
 
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'login' %}">Login & Account</a>
+                <a class="nav-link" href="{% url 'login' %}"><button class="btn btn-info">Login & Account</button></a>
               </li>
             </ul>
           </div>

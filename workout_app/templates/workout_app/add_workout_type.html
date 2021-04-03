@@ -6,12 +6,16 @@
 
 <h1 style="text-align:center; padding:15px">Add Workout Type</h1>
 <div class="mx-auto" style="width:40%">
+  <p><a href="{% url 'add_workout_linked'%}">Add Workout</a> / <a href="{% url 'add_workout_type'%}">Add Workout Type</a> / <a href="{% url 'add_workout_type_count' %}">Add Count Type</a></p>
   <form action="" method="post">
       {% csrf_token %}
         {{ form|crispy }}
+        <div class="my-4">
+          <a href="{% url 'add_workout_type_count' %}" class="btn btn-outline-secondary">Add New Workout Count</a>
+        </div>
         <div class="text-right">
-          <button type="submit" name="Upload Workout Type Count">Upload Workout Type</button>
-          <button type="reset" name="Reset">Reset</button>
+          <button type="submit" name="Upload Workout Type Count" class="btn btn-dark">Upload Workout Type</button>
+          <button type="reset" name="Reset" class="btn btn-secondary">Reset</button>
         </div>
   </form>
 </div>

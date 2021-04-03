@@ -24,6 +24,7 @@ class WorkoutTypeForm(forms.ModelForm):
         model = WorkoutType
         exclude = ['profile', 'is_official_type']
 
+
 class WorkoutLinkedForm(forms.ModelForm):
     class Meta:
         model = WorkoutLinked
