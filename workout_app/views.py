@@ -11,7 +11,7 @@ from .models import WorkoutLinked
 from django.forms.models import model_to_dict
 from .models import WorkoutType
 from datetime import timedelta
-from measurement.measures import Distance
+from measurement.measures import Distance, Weight
 from .models import WorkoutTypeCount
 import m26
 
@@ -72,6 +72,7 @@ def workoutSummary(request):
         if woct:
             dur_tot = timedelta()
             dist_tot = Distance()
+            weight_tot = Weight()
             context['wts'][wt] = []
             if wt.has_duration:
                 for iw in woct:
@@ -85,7 +86,10 @@ def workoutSummary(request):
                 m26d = m26.Distance(dist_tot.mi)
                 m26t = m26.ElapsedTime(str(dur_tot))
                 m26s = m26.Speed(m26d, m26t)
-                context['wts'][wt].append(('Pace per Mile', m26s.pace_per_mile()))
+                try:
+                    context['wts'][wt].append(('Pace per Mile', m26s.pace_per_mile()))
+                except:
+                    print("divide by zero for Pace per Mile")
             if wt.has_first_count_component:
                 fcc_tot = 0
                 for iw in woct:
@@ -96,6 +100,28 @@ def workoutSummary(request):
                 for iw in woct:
                     scc_tot += iw.second_raw_count
                 context['wts'][wt].append(('Total ' + wt.second_count_component.type_name, scc_tot))
+            if wt.has_weight_comp:
+                for iw in woct:
+                    weight_tot += iw.weight
+                context['wts'][wt].append(('Average Weight per Workout', weight_tot / len(woct)))
+            if wt.has_set_rep_comp:
+                st = 0
+                rt = 0
+                for iw in woct:
+                    st += iw.raw_set
+                    rt += (iw.raw_set * iw.raw_rep)
+                avg_rps = rt / st
+                context['wts'][wt].append(('Total Sets', st))
+                context['wts'][wt].append(('Average Reps per Set', avg_rps))
+                context['wts'][wt].append(('Total Reps', rt))
+                if weight_tot != 0:
+                    weight_tot_w = Weight()
+                    for iw in woct:
+                        weight_tot_w += (iw.raw_set * iw.raw_rep) * iw.weight
+                    try:
+                        context['wts'][wt].append(('Average Weight per Rep', weight_tot_w / rt))
+                    except:
+                        print("divide by zero for Average Weight per Rep")
     for ct in WorkoutTypeCount.objects.all():
         cc = 0
         for wt in WorkoutType.objects.all():

@@ -59,13 +59,15 @@ class WorkoutLinked(models.Model):
     start_date = models.DateField(default=datetime.date.today)
     one_day = models.BooleanField(default=True)
     end_date = models.DateField(default=datetime.date.today)
-    duration = models.DurationField(null=True)
+    duration = models.DurationField(null=True, blank=True)
     intensity = models.CharField(
         max_length = 2,
         choices = INTENSITY_CHOICES,
         default = 'L'
     )
     dist = MeasurementField(
+        null=True,
+        blank=True,
         default=0,
         measurement=Distance,
         unit_choices=(("mi", "mi"), ("km", "km"), ("ft", "ft"), ("m", "m"))
