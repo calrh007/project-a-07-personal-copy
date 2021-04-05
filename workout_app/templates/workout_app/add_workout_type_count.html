@@ -1,0 +1,20 @@
+{% extends "workout_app/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h1 style="text-align:center; padding:15px">Add Workout Type Count</h1>
+<div class="mx-auto" style="width:40%">
+  <p><a href="{% url 'add_workout_linked'%}">Add Workout</a> / <a href="{% url 'add_workout_type'%}">Add Workout Type</a> / <a href="{% url 'add_workout_type_count' %}">Add Count Type</a></p>
+  <form action="" method="post">
+      {% csrf_token %}
+        {{ form|crispy }}
+        <div class="text-right">
+          <button type="submit" name="Upload Workout Type Count" class="btn btn-dark">Upload Workout Type Count</button>
+          <button type="reset" name="Reset" class="btn btn-secondary">Reset</button>
+        </div>
+  </form>
+</div>
+
+{% endblock %}

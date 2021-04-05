@@ -29,26 +29,41 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ml-auto align-items-center">
               <li class="nav-item">
                 <a class="nav-link" href="/">Home</a>
               </li>
 
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'add_workout' %}">Add Workout</a>
+                <a class="nav-link" href="{% url 'add_workout_linked' %}">Add Workout</a>
               </li>
 
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'workout_list' %}">My Workouts</a>
+                <a class="nav-link" href="{% url 'workout_linked_list' %}">My Workouts</a>
               </li>
 
               <li class="nav-item">
-                <a class="nav-link" href="/login">Login & Account</a>
+                <a class="nav-link" href="{% url 'workout_summary' %}">Workout Summaries</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}"><button class="btn btn-info">Login & Account</button></a>
               </li>
             </ul>
           </div>
         </div>
       </nav>
+
+    {% for message in messages %}
+    <div class="container-fluid p-0">
+      <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+      </div>
+    </div>
+    {% endfor %}
 
     {% block content %}{% endblock %}
 

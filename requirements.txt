@@ -2,3 +2,6 @@ Django
 gunicorn
 django-heroku
 django-allauth
+django-measurement
+django-crispy-forms
+m26

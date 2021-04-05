@@ -1,0 +1,19 @@
+{% extends "workout_app/base.html" %}
+
+{% block content %}
+<div class="col text-center">
+{% if user_workouts %}
+    <ul>
+    {% for workout_linked in user_workouts %}
+        <h2 style="color: black">Type: {{ workout_linked.workoutType }}</h2>
+        {% if workout_linked.workoutType.has_intensity %}
+            <p style="color: black">Intensity: {{ workout_linked.intensity }}</p>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No workouts are available.</p>
+{% endif %}
+</html>
+</div>
+{% endblock %}

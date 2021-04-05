@@ -5,14 +5,16 @@
     {% load socialaccount %}
     <html>
         <body>
-            <h1>Account Login & Account Info</h1>
-            {% if user.is_authenticated %}
-            <p>You are logged in as {{ user.username }} with email {{ user.email }}</p>
-            <a href="/logout">Logout</a>
-            {% else %}
-            <p>You are not currently logged in</p>
-            <a href="{% provider_login_url 'google' %}">Login With Google</a>
-            {% endif %}
+            <div style="text-align:center">
+                <h1 style="padding:15px">Account Login & Account Info</h1>
+                {% if user.is_authenticated %}
+                <p>You are logged in as {{ user.username }} with email {{ user.email }}</p>
+                <a href="/logout"><button class="btn btn-dark">Logout</button></a>
+                {% else %}
+                <p>You are not currently logged in</p>
+                <a href="{% provider_login_url 'google' %}"><button class="btn btn-dark">Login With Google</button></a>
+                {% endif %}
+            </div>
         </body>
     </html>
 

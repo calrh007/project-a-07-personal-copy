@@ -1,0 +1,60 @@
+{% extends "workout_app/base.html" %}
+
+{% block content %}
+<div class="col text-center">
+    <h1 style="padding:15px">My Workouts</h1>
+{% if user_workouts %}
+    <ul>
+    {% for workout_linked in user_workouts %}
+        <div class="card mx-auto mb-3" style="width:40%">
+            <div class="card-header">
+                <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">{{ workout_linked.workoutType }} </span>
+                <span style="float:right; font-weight:lighter; font-size:15px"><em>{{ workout_linked.start_date }}
+                {% if not workout_linked.one_day %}
+                    - {{workout_linked.end_date}}
+                {% endif %}
+                </em></span></h2>
+            </div>
+            <div class="card-body" style="text-align:left">
+                {% if workout_linked.workoutType.has_intensity %}
+                    <p style="color: black"><b>Intensity: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.get_intensity_display }}</span></p>
+                {% endif %}
+                {% if workout_linked.workoutType.has_duration %}
+                    <p style="color: black"><b>Duration: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.duration }}</span></p>
+                {% endif %}
+                {% if workout_linked.workoutType.has_distance_comp %}
+                    <p style="color: black"><b>Distance: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.dist }}</span></p>
+                {% endif %}
+                {% if workout_linked.workoutType.has_first_count_component %}
+                    <p style="color: black"><b>{{workout_linked.workoutType.first_count_component}}: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.raw_count }}</span></p>
+                {% endif %}
+                {% if workout_linked.workoutType.has_second_count_component %}
+                    <p style="color: black"><b>{{workout_linked.workoutType.second_count_component}}: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.second_raw_count }}</span></p>
+                {% endif %}
+                {% if workout_linked.workoutType.has_set_rep_comp %}
+                    <p style="color: black"><b>Sets: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.raw_set }}</span></p>
+                    <p style="color: black"><b>Reps: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.raw_rep }}</span></p>
+                {% endif %}
+                {% if workout_linked.workoutType.has_weight_comp %}
+                    <p style="color: black"><b>Weight: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.weight }}</span></p>
+                {% endif %}
+
+
+                <form action="" method="get">
+                    <button class = "btn btn-default" name="DeleteButton" value="{{ workout_linked.id }}">Delete</button>
+                </form>
+
+                <form action="" method="get">
+                    <button class = "btn btn-default" name="EditButton" value="{{ workout_linked.id }}">Edit</button>
+                </form>
+
+            </div>
+        </div>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No workouts are available.</p>
+{% endif %}
+</html>
+</div>
+{% endblock %}

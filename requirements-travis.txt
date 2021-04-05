@@ -1,3 +1,6 @@
 Django
 gunicorn
 django-allauth
+django-measurement
+django-crispy-forms
+m26
