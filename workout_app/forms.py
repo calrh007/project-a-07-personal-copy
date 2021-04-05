@@ -29,6 +29,9 @@ class WorkoutLinkedForm(forms.ModelForm):
     class Meta:
         model = WorkoutLinked
         exclude = ['profile']
+        widgets = {
+            'duration': forms.TextInput(attrs={'placeholder': 'HH:MM:SS'}),
+        }
 
 class WorkoutTypeCountForm(forms.ModelForm):
     class Meta:

@@ -17,23 +17,26 @@
             </div>
             <div class="card-body" style="text-align:left">
                 {% if workout_linked.workoutType.has_intensity %}
-                    <p style="color: black"><b>Intensity:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.get_intensity_display }}</span></p>
+                    <p style="color: black"><b>Intensity: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.get_intensity_display }}</span></p>
+                {% endif %}
+                {% if workout_linked.workoutType.has_duration %}
+                    <p style="color: black"><b>Duration: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.duration }}</span></p>
                 {% endif %}
                 {% if workout_linked.workoutType.has_distance_comp %}
-                    <p style="color: black"><b>Distance:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.dist }}</span></p>
+                    <p style="color: black"><b>Distance: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.dist }}</span></p>
                 {% endif %}
                 {% if workout_linked.workoutType.has_first_count_component %}
-                    <p style="color: black"><b>{{workout_linked.workoutType.first_count_component}}:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.raw_count }}</span></p>
+                    <p style="color: black"><b>{{workout_linked.workoutType.first_count_component}}: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.raw_count }}</span></p>
                 {% endif %}
                 {% if workout_linked.workoutType.has_second_count_component %}
-                    <p style="color: black"><b>{{workout_linked.workoutType.second_count_component}}:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.second_raw_count }}</span></p>
+                    <p style="color: black"><b>{{workout_linked.workoutType.second_count_component}}: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.second_raw_count }}</span></p>
                 {% endif %}
                 {% if workout_linked.workoutType.has_set_rep_comp %}
-                    <p style="color: black"><b>Sets:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.raw_set }}</span></p>
-                    <p style="color: black"><b>Reps:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.raw_rep }}</span></p>
+                    <p style="color: black"><b>Sets: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.raw_set }}</span></p>
+                    <p style="color: black"><b>Reps: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.raw_rep }}</span></p>
                 {% endif %}
                 {% if workout_linked.workoutType.has_weight_comp %}
-                    <p style="color: black"><b>Weight:</b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.weight }}</span></p>
+                    <p style="color: black"><b>Weight: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.weight }}</span></p>
                 {% endif %}
 
 

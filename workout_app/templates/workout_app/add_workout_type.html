@@ -10,9 +10,11 @@
   <form action="" method="post">
       {% csrf_token %}
         {{ form|crispy }}
+        {% comment %}
         <div class="my-4">
           <a href="{% url 'add_workout_type_count' %}" class="btn btn-outline-secondary">Add New Workout Count</a>
         </div>
+        {% endcomment %}
         <div class="text-right">
           <button type="submit" name="Upload Workout Type Count" class="btn btn-dark">Upload Workout Type</button>
           <button type="reset" name="Reset" class="btn btn-secondary">Reset</button>

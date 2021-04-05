@@ -18,4 +18,5 @@ urlpatterns = [
     path('add_workout_linked/', views.newWorkoutLinked, name='add_workout_linked'),
     path('add_workout_type_count/', views.newWorkoutTypeCount, name='add_workout_type_count'),
     path('workout_linked_list/', views.workoutLinkedListView, name='workout_linked_list'),
+    path('workout_summary/', views.workoutSummary, name='workout_summary'),
 ]

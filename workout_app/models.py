@@ -32,6 +32,7 @@ class WorkoutTypeCount(models.Model):
 class WorkoutType(models.Model):
     type_name = models.CharField(max_length=30, default='')
     has_intensity = models.BooleanField(default=False)
+    has_duration = models.BooleanField(default=False)
     has_distance_comp = models.BooleanField(default=False)
     has_first_count_component = models.BooleanField(default=False)
     first_count_component = models.ForeignKey(WorkoutTypeCount, on_delete=models.CASCADE, null=True, blank=True)
@@ -58,6 +59,7 @@ class WorkoutLinked(models.Model):
     start_date = models.DateField(default=datetime.date.today)
     one_day = models.BooleanField(default=True)
     end_date = models.DateField(default=datetime.date.today)
+    duration = models.DurationField(null=True)
     intensity = models.CharField(
         max_length = 2,
         choices = INTENSITY_CHOICES,
