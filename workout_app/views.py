@@ -8,6 +8,7 @@ from .forms import WorkoutTypeForm, WorkoutLinkedForm, WorkoutTypeCountForm
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from .models import WorkoutLinked
+from django.forms.models import model_to_dict
 
 LE = 'Please login before viewing or submitting this'
 
@@ -48,7 +49,7 @@ def workoutLinkedListView(request):
                 ots.save()
                 return HttpResponseRedirect('/workout_linked_list/')
         else:
-            form = WorkoutLinkedForm()
+            form = WorkoutLinkedForm(initial = model_to_dict(current_workout))
         return render(request, 'workout_app/edit_workout_linked.html', {'form': form})
 
     return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
