@@ -16,12 +16,21 @@ from .models import WorkoutTypeCount
 import m26
 
 from .models import Achievement
+from .models import Profile
+from django.template.defaultfilters import pluralize
 
 LE = 'Please login before viewing or submitting this'
 
 def index(request):
     context = {}
     return render(request, 'workout_app/index.html', context)
+
+def ensure_profile(user_te):
+    try:
+        user_profile = user_te.profile
+    except:
+        new_profile = Profile(user = user_te)
+        new_profile.save()
 
 # class AddWorkoutView(CreateView):
 #     model = Workout
@@ -122,6 +131,7 @@ def achievementsView(request):
     if request.user.is_anonymous:
         messages.error(request, LE)
         return HttpResponseRedirect('/login/')
+    ensure_profile(request.user)
     user_workouts = WorkoutLinked.objects.filter(profile=request.user)
     context = {}
     # context['achievements_calc'] = [(a, achievementEarned(a, user_workouts)) for a in Achievement.objects.all()]
@@ -129,14 +139,34 @@ def achievementsView(request):
     context['total_possible_points'] = 0
     context['total_earned_points'] = 0
     context['total_missed_points'] = 0
+    context['total_possible_achievement_num'] = 0
+    context['total_earned_achievement_num'] = 0
+    context['total_missed_achievement_num'] = 0
     for a in Achievement.objects.all():
         context['total_possible_points'] += a.points
+        context['total_possible_achievement_num'] += 1
         if achievementEarned(a, user_workouts):
             context['achievements_calc'].append((a, True))
             context['total_earned_points'] += a.points
+            context['total_earned_achievement_num'] += 1
         else:
             context['achievements_calc'].append((a, False))
             context['total_missed_points'] += a.points
+            context['total_missed_achievement_num'] += 1
+    # context['point_delta'] = context['total_earned_points'] - request.user.profile.achievement_points
+    point_delta = context['total_earned_points'] - request.user.profile.achievement_points
+    if point_delta > 0:
+        messages.info(request, ("You've gained {pi} point" + pluralize(point_delta) + " since last checking your achievements").format(pi = point_delta))
+    elif point_delta < 0:
+        messages.info(request, ("You've lost {pi} point" + pluralize(-1 * point_delta) + " since last checking your achievements").format(pi = -1 * point_delta))
+    achievement_num_delta = context['total_earned_achievement_num'] - request.user.profile.achievement_num
+    if achievement_num_delta > 0:
+        messages.info(request, ("You've gained {pi} achievement" + pluralize(achievement_num_delta) + " since last checking your achievements").format(pi = achievement_num_delta))
+    elif achievement_num_delta < 0:
+        messages.info(request, ("You've lost {pi} achievement" + pluralize(-1 * achievement_num_delta) + " since last checking your achievements").format(pi = -1 * achievement_num_delta))
+    request.user.profile.achievement_points = context['total_earned_points']
+    request.user.profile.achievement_num = context['total_earned_achievement_num']
+    request.user.profile.save()
     return render(request, 'workout_app/achievements.html', context)
 
 def workoutLinkedListView(request):

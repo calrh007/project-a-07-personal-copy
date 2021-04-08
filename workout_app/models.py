@@ -26,6 +26,13 @@ import os
 #     def get_absolute_url(self):
 #         return reverse('workout_list')
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    achievement_points = models.PositiveIntegerField(default = 0)
+    achievement_num = models.PositiveIntegerField(default = 0)
+    def __str__(self):
+        return str(self.user)
+
 class WorkoutTypeCount(models.Model):
     profile = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     type_name = models.CharField(max_length=30, default='')
