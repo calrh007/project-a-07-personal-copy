@@ -66,6 +66,56 @@ def achievementEarned(achivement, workouts):
             spec_count += wo.second_raw_count
         if spec_count < achivement.second_specific_WorkoutTypeCount_min:
             return False
+    if achivement.has_min_single_weight:
+        satis = False
+        for wo in tf.filter(workoutType__has_weight_comp = True):
+            if wo.weight >= achivement.min_single_weight:
+                satis = True
+                break
+        if not satis:
+            return False
+    if achivement.has_min_total_weight:
+        weight_tot = Weight()
+        for wo in tf.filter(workoutType__has_weight_comp = True, workoutType__has_set_rep_comp = False):
+            weight_tot += wo.weight
+        for wo in tf.filter(workoutType__has_weight_comp = True, workoutType__has_set_rep_comp = True):
+            weight_tot += (wo.raw_set * wo.raw_rep * wo.weight)
+        if weight_tot < achivement.min_total_weight:
+            return False
+    if achivement.has_min_reps:
+        reps_tot = 0
+        for wo in tf.filter(workoutType__has_set_rep_comp = True):
+            reps_tot += (wo.raw_set * wo.raw_rep)
+        if reps_tot < achivement.min_reps:
+            return False
+    if achivement.has_min_single_distance:
+        satis = False
+        for wo in tf.filter(workoutType__has_distance_comp = True):
+            if wo.dist >= achivement.min_single_distance:
+                satis = True
+                break
+        if not satis:
+            return False
+    if achivement.has_min_total_distance:
+        dist_tot = Distance()
+        for wo in tf.filter(workoutType__has_distance_comp = True):
+            dist_tot += wo.dist
+        if dist_tot < achivement.min_total_distance:
+            return False
+    if achivement.has_min_single_duration:
+        satis = False
+        for wo in tf.filter(workoutType__has_duration = True):
+            if wo.duration >= achivement.min_single_duration:
+                satis = True
+                break
+        if not satis:
+            return False
+    if achivement.has_min_total_duration:
+        dur_tot = timedelta()
+        for wo in tf.filter(workoutType__has_duration = True):
+            dur_tot += wo.duration
+        if dur_tot < achivement.min_total_duration:
+            return False
     return True
 
 def achievementsView(request):
@@ -74,7 +124,19 @@ def achievementsView(request):
         return HttpResponseRedirect('/login/')
     user_workouts = WorkoutLinked.objects.filter(profile=request.user)
     context = {}
-    context['achievements_calc'] = [(a, achievementEarned(a, user_workouts)) for a in Achievement.objects.all()]
+    # context['achievements_calc'] = [(a, achievementEarned(a, user_workouts)) for a in Achievement.objects.all()]
+    context['achievements_calc'] = []
+    context['total_possible_points'] = 0
+    context['total_earned_points'] = 0
+    context['total_missed_points'] = 0
+    for a in Achievement.objects.all():
+        context['total_possible_points'] += a.points
+        if achievementEarned(a, user_workouts):
+            context['achievements_calc'].append((a, True))
+            context['total_earned_points'] += a.points
+        else:
+            context['achievements_calc'].append((a, False))
+            context['total_missed_points'] += a.points
     return render(request, 'workout_app/achievements.html', context)
 
 def workoutLinkedListView(request):

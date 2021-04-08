@@ -78,8 +78,8 @@ class WorkoutLinked(models.Model):
 
     raw_count = models.PositiveIntegerField(default = 0)
     second_raw_count = models.PositiveIntegerField(default = 0)
-    raw_set = models.PositiveIntegerField(default = 0)
-    raw_rep = models.PositiveIntegerField(default = 0)
+    raw_set = models.PositiveIntegerField(default = 1)
+    raw_rep = models.PositiveIntegerField(default = 1)
     weight = MeasurementField(
         null=True,
         blank=True,
@@ -114,3 +114,42 @@ class Achievement(models.Model):
     has_second_specific_WorkoutTypeCount = models.BooleanField(default=False)
     second_specific_WorkoutTypeCount = models.ForeignKey(WorkoutTypeCount, on_delete=models.CASCADE, blank=True, related_name='sswtc', null=True)
     second_specific_WorkoutTypeCount_min = models.PositiveIntegerField(blank = True, null=True)
+    has_min_single_weight = models.BooleanField(default=False)
+    min_single_weight = MeasurementField(
+        null=True,
+        blank=True,
+        default=0,
+        measurement=Weight,
+        unit_choices=(("lb", "lb"), ("kg", "kg"))
+    )
+    has_min_total_weight = models.BooleanField(default=False)
+    min_total_weight = MeasurementField(
+        null=True,
+        blank=True,
+        default=0,
+        measurement=Weight,
+        unit_choices=(("lb", "lb"), ("kg", "kg"))
+    )
+    has_min_reps = models.BooleanField(default=False)
+    min_reps = models.PositiveIntegerField(blank = True, null = True)
+    has_min_single_distance = models.BooleanField(default=False)
+    min_single_distance = MeasurementField(
+        null=True,
+        blank=True,
+        default=0,
+        measurement=Distance,
+        unit_choices=(("mi", "mi"), ("km", "km"), ("ft", "ft"), ("m", "m"))
+    )
+    has_min_total_distance = models.BooleanField(default=False)
+    min_total_distance = MeasurementField(
+        null=True,
+        blank=True,
+        default=0,
+        measurement=Distance,
+        unit_choices=(("mi", "mi"), ("km", "km"), ("ft", "ft"), ("m", "m"))
+    )
+    has_min_single_duration = models.BooleanField(default=False)
+    min_single_duration = models.DurationField(null=True, blank=True)
+    has_min_total_duration = models.BooleanField(default=False)
+    min_total_duration = models.DurationField(null=True, blank=True)
+    points = models.PositiveIntegerField(default = 10, blank = True, null = True)

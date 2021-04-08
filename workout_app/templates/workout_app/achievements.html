@@ -6,9 +6,36 @@
     <h1 style="padding:15px">Achievements</h1>
 {% if achievements_calc %}
 
+    <ul>
+        <div class="card mx-auto mb-3" style="width:40%">
+            <div class="card-header">
+                <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">Total Possible Points</span>
+                <span style="float:right">
+                    {{ total_possible_points }}
+                </span></h2>
+            </div>
+        </div>
+        <div class="card mx-auto mb-3" style="width:40%">
+            <div class="card-header">
+                <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">Total Points Earned</span>
+                <span style="float:right">
+                    {{ total_earned_points }}
+                </span></h2>
+            </div>
+        </div>
+        <div class="card mx-auto mb-3" style="width:40%">
+            <div class="card-header">
+                <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">Total Points Unearned</span>
+                <span style="float:right">
+                    {{ total_missed_points }}
+                </span></h2>
+            </div>
+        </div>
+    </ul>
+
     {% for ach, earned in achievements_calc %}
         {% if earned %}
-            <a tabindex="0" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="{{ach.title}}" data-content="{{ach.description}}">
+            <a tabindex="0" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="{{ach.title}} ({{ach.points}} points)" data-content="{{ach.description}}">
                 <img src="{% get_static_prefix %}icons/{{ach.icon}}" width="50" style="filter: blur(0px);" />
             </a>
         {% else %}
