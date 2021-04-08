@@ -89,7 +89,7 @@ class WorkoutLinked(models.Model):
     )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-ICON_CHOICES = [(fn, fn) for fn in os.listdir(BASE_DIR / 'staticfiles')]
+ICON_CHOICES = [(fn, fn) for fn in os.listdir(BASE_DIR / 'staticfiles' / 'icons')]
 
 class Achievement(models.Model):
     title = models.CharField(max_length=30, default='')
