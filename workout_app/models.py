@@ -8,6 +8,9 @@ from measurement.measures import Distance, Weight
 # from django.conf import settings
 import datetime
 
+from pathlib import Path
+import os
+
 # Create your models here.
 
 # class Workout(models.Model):
@@ -84,3 +87,30 @@ class WorkoutLinked(models.Model):
         measurement=Weight,
         unit_choices=(("lb", "lb"), ("kg", "kg"))
     )
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+ICON_CHOICES = [(fn, fn) for fn in os.listdir(BASE_DIR / 'staticfiles')]
+
+class Achievement(models.Model):
+    title = models.CharField(max_length=30, default='')
+    description = models.TextField(default='')
+    icon = models.CharField(
+        max_length=100, 
+        choices = ICON_CHOICES
+    )
+    has_start_date = models.BooleanField(default=False)
+    start_date = models.DateField(default=datetime.date.today)
+    has_end_date = models.BooleanField(default=False)
+    end_date = models.DateField(default=datetime.date.today)
+    has_specific_workoutType = models.BooleanField(default=False)
+    specific_workoutType = models.ForeignKey(WorkoutType, on_delete=models.CASCADE, null=True, blank=True)
+    has_second_specific_workoutType = models.BooleanField(default=False)
+    second_specific_workoutType = models.ForeignKey(WorkoutType, on_delete=models.CASCADE, blank=True, related_name='sswt', null=True)
+    has_workout_count_min = models.BooleanField(default=False)
+    workout_count_min = models.PositiveIntegerField(blank = True, null = True)
+    has_specific_WorkoutTypeCount = models.BooleanField(default=False)
+    specific_WorkoutTypeCount = models.ForeignKey(WorkoutTypeCount, on_delete=models.CASCADE, null=True, blank=True)
+    specific_WorkoutTypeCount_min = models.PositiveIntegerField(blank = True, null = True)
+    has_second_specific_WorkoutTypeCount = models.BooleanField(default=False)
+    second_specific_WorkoutTypeCount = models.ForeignKey(WorkoutTypeCount, on_delete=models.CASCADE, blank=True, related_name='sswtc', null=True)
+    second_specific_WorkoutTypeCount_min = models.PositiveIntegerField(blank = True, null=True)

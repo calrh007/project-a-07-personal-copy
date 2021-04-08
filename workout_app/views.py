@@ -15,6 +15,8 @@ from measurement.measures import Distance, Weight
 from .models import WorkoutTypeCount
 import m26
 
+from .models import Achievement
+
 LE = 'Please login before viewing or submitting this'
 
 def index(request):
@@ -32,6 +34,48 @@ def index(request):
 #     object_list = Workout.objects.all()
 #     template_name = 'workout_app/workout_list.html'
 #     fields = '__all__'
+
+def achievementEarned(achivement, workouts):
+    tf = workouts.all()
+    if achivement.has_start_date:
+        tf_temp = tf.filter(start_date__gte = achivement.start_date, one_day = True)
+        tf = tf_temp.union(tf.filter(end_date__gte = achivement.start_date, one_day = False))
+    if achivement.has_end_date:
+        tf = tf.filter(start_date__lte = achivement.end_date)
+    if achivement.has_specific_workoutType:
+        if achivement.has_second_specific_workoutType:
+            tf = tf.filter(workoutType__in = [achivement.specific_workoutType, achivement.second_specific_workoutType])
+        else:
+            tf = tf.filter(workoutType = achivement.specific_workoutType)
+    if achivement.has_workout_count_min:
+        if tf.count() < achivement.workout_count_min:
+            return False
+    if achivement.has_specific_WorkoutTypeCount:
+        spec_count = 0
+        for wo in tf.filter(workoutType__has_first_count_component = True, workoutType__first_count_component = achivement.specific_WorkoutTypeCount):
+            spec_count += wo.raw_count
+        for wo in tf.filter(workoutType__has_second_count_component = True, workoutType__second_count_component = achivement.specific_WorkoutTypeCount):
+            spec_count += wo.second_raw_count
+        if spec_count < achivement.specific_WorkoutTypeCount_min:
+            return False
+    if achivement.has_second_specific_WorkoutTypeCount:
+        spec_count = 0
+        for wo in tf.filter(workoutType__has_first_count_component = True, workoutType__first_count_component = achivement.second_specific_WorkoutTypeCount):
+            spec_count += wo.raw_count
+        for wo in tf.filter(workoutType__has_second_count_component = True, workoutType__second_count_component = achivement.second_specific_WorkoutTypeCount):
+            spec_count += wo.second_raw_count
+        if spec_count < achivement.second_specific_WorkoutTypeCount_min:
+            return False
+    return True
+
+def achievementsView(request):
+    if request.user.is_anonymous:
+        messages.error(request, LE)
+        return HttpResponseRedirect('/login/')
+    user_workouts = WorkoutLinked.objects.filter(profile=request.user)
+    context = {}
+    context['achievements_calc'] = [(a, achievementEarned(a, user_workouts)) for a in Achievement.objects.all()]
+    return render(request, 'workout_app/achievements.html', context)
 
 def workoutLinkedListView(request):
     if request.user.is_anonymous:
