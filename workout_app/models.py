@@ -8,6 +8,9 @@ from measurement.measures import Distance, Weight
 # from django.conf import settings
 import datetime
 
+from pathlib import Path
+import os
+
 # Create your models here.
 
 # class Workout(models.Model):
@@ -22,6 +25,14 @@ import datetime
 #         return "type: " + self.type
 #     def get_absolute_url(self):
 #         return reverse('workout_list')
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    achievement_points = models.PositiveIntegerField(default = 0)
+    achievement_num = models.PositiveIntegerField(default = 0)
+    profilePic = models.ImageField(default='defaultProfilePic.jpg', upload_to='userProfilePics')
+    def __str__(self):
+        return str(self.user)
 
 class WorkoutTypeCount(models.Model):
     profile = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -75,8 +86,8 @@ class WorkoutLinked(models.Model):
 
     raw_count = models.PositiveIntegerField(default = 0)
     second_raw_count = models.PositiveIntegerField(default = 0)
-    raw_set = models.PositiveIntegerField(default = 0)
-    raw_rep = models.PositiveIntegerField(default = 0)
+    raw_set = models.PositiveIntegerField(default = 1)
+    raw_rep = models.PositiveIntegerField(default = 1)
     weight = MeasurementField(
         null=True,
         blank=True,
@@ -84,3 +95,71 @@ class WorkoutLinked(models.Model):
         measurement=Weight,
         unit_choices=(("lb", "lb"), ("kg", "kg"))
     )
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+ICON_CHOICES = [(fn, fn) for fn in os.listdir(BASE_DIR / 'static' / 'icons')]
+
+class Achievement(models.Model):
+    title = models.CharField(max_length=30, default='')
+    description = models.TextField(default='')
+    icon = models.CharField(
+        max_length=100, 
+        choices = ICON_CHOICES
+    )
+    has_start_date = models.BooleanField(default=False)
+    start_date = models.DateField(default=datetime.date.today)
+    has_end_date = models.BooleanField(default=False)
+    end_date = models.DateField(default=datetime.date.today)
+    has_specific_workoutType = models.BooleanField(default=False)
+    specific_workoutType = models.ForeignKey(WorkoutType, on_delete=models.CASCADE, null=True, blank=True)
+    has_second_specific_workoutType = models.BooleanField(default=False)
+    second_specific_workoutType = models.ForeignKey(WorkoutType, on_delete=models.CASCADE, blank=True, related_name='sswt', null=True)
+    has_workout_count_min = models.BooleanField(default=False)
+    workout_count_min = models.PositiveIntegerField(blank = True, null = True)
+    has_specific_WorkoutTypeCount = models.BooleanField(default=False)
+    specific_WorkoutTypeCount = models.ForeignKey(WorkoutTypeCount, on_delete=models.CASCADE, null=True, blank=True)
+    specific_WorkoutTypeCount_min = models.PositiveIntegerField(blank = True, null = True)
+    has_second_specific_WorkoutTypeCount = models.BooleanField(default=False)
+    second_specific_WorkoutTypeCount = models.ForeignKey(WorkoutTypeCount, on_delete=models.CASCADE, blank=True, related_name='sswtc', null=True)
+    second_specific_WorkoutTypeCount_min = models.PositiveIntegerField(blank = True, null=True)
+    has_min_single_weight = models.BooleanField(default=False)
+    min_single_weight = MeasurementField(
+        null=True,
+        blank=True,
+        default=0,
+        measurement=Weight,
+        unit_choices=(("lb", "lb"), ("kg", "kg"))
+    )
+    has_min_total_weight = models.BooleanField(default=False)
+    min_total_weight = MeasurementField(
+        null=True,
+        blank=True,
+        default=0,
+        measurement=Weight,
+        unit_choices=(("lb", "lb"), ("kg", "kg"))
+    )
+    has_min_reps = models.BooleanField(default=False)
+    min_reps = models.PositiveIntegerField(blank = True, null = True)
+    has_min_single_distance = models.BooleanField(default=False)
+    min_single_distance = MeasurementField(
+        null=True,
+        blank=True,
+        default=0,
+        measurement=Distance,
+        unit_choices=(("mi", "mi"), ("km", "km"), ("ft", "ft"), ("m", "m"))
+    )
+    has_min_total_distance = models.BooleanField(default=False)
+    min_total_distance = MeasurementField(
+        null=True,
+        blank=True,
+        default=0,
+        measurement=Distance,
+        unit_choices=(("mi", "mi"), ("km", "km"), ("ft", "ft"), ("m", "m"))
+    )
+    has_min_single_duration = models.BooleanField(default=False)
+    min_single_duration = models.DurationField(null=True, blank=True)
+    has_min_total_duration = models.BooleanField(default=False)
+    min_total_duration = models.DurationField(null=True, blank=True)
+    points = models.PositiveIntegerField(default = 10, blank = True, null = True)
+    has_max_pace = models.BooleanField(default=False)
+    max_pace_per_mile = models.DurationField(null=True, blank=True)
