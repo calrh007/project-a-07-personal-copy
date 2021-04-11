@@ -160,3 +160,5 @@ class Achievement(models.Model):
     has_min_total_duration = models.BooleanField(default=False)
     min_total_duration = models.DurationField(null=True, blank=True)
     points = models.PositiveIntegerField(default = 10, blank = True, null = True)
+    has_max_pace = models.BooleanField(default=False)
+    max_pace_per_mile = models.DurationField(null=True, blank=True)

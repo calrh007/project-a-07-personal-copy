@@ -10,7 +10,7 @@ from django.contrib import messages
 from .models import WorkoutLinked
 from django.forms.models import model_to_dict
 from .models import WorkoutType
-from datetime import timedelta
+from datetime import datetime, timedelta
 from measurement.measures import Distance, Weight
 from .models import WorkoutTypeCount
 import m26
@@ -125,6 +125,26 @@ def achievementEarned(achivement, workouts):
             dur_tot += wo.duration
         if dur_tot < achivement.min_total_duration:
             return False
+    if achivement.has_max_pace:
+        tf_temp = tf.filter(workoutType__has_distance_comp = True, workoutType__has_duration = True)
+        if achivement.has_min_single_duration:
+            tf_temp = tf_temp.filter(duration__gte = achivement.min_single_duration)
+        if achivement.has_min_single_distance:
+            tf_temp = tf_temp.filter(dist__gte = achivement.min_single_distance)
+        satis = False
+        for wo in tf_temp:
+            m26d = m26.Distance(wo.dist.mi)
+            m26t = m26.ElapsedTime(int(wo.duration.total_seconds()))
+            m26s = m26.Speed(m26d, m26t)
+            try:
+                t = datetime.strptime(m26s.pace_per_mile(),"%M:%S.%f")
+                if timedelta(hours=t.hour, minutes=t.minute, seconds=t.second) <= achivement.max_pace_per_mile:
+                    satis = True
+                    break
+            except:
+                pass # divide by zero for Pace per mile
+        if not satis:
+            return False
     return True
 
 def achievementsView(request):
@@ -220,12 +240,12 @@ def workoutSummary(request):
                 context['wts'][wt].append(('Total Distance', dist_tot))
             if dur_tot != 0 and dist_tot != 0:
                 m26d = m26.Distance(dist_tot.mi)
-                m26t = m26.ElapsedTime(str(dur_tot))
+                m26t = m26.ElapsedTime(int(dur_tot.total_seconds()))
                 m26s = m26.Speed(m26d, m26t)
                 try:
                     context['wts'][wt].append(('Pace per Mile', m26s.pace_per_mile()))
                 except:
-                    print("divide by zero for Pace per Mile")
+                    pass # divide by zero for Pace per mile
             if wt.has_first_count_component:
                 fcc_tot = 0
                 for iw in woct:
