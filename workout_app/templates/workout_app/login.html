@@ -14,7 +14,7 @@
                         <div class="col-7" style="color:whitesmoke; padding:70px;">
                             <h1>{{ user.username }}</h1>
                             <p>{{ user.email }}</p>
-                            <p>{{ user.profile.achievement_points }} points • {{ user.profile.achievement_num }} achievements</p>
+                            <p>{{ user.profile.achievement_points }} point{{ user.profile.achievement_points|pluralize }} • {{ user.profile.achievement_num }} achievement{{ user.profile.achievement_num|pluralize }}</p>
                             <a href="/logout"><button class="btn btn-dark">Logout</button></a>
                         </div>
                     </div>
