@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from workout_app.models import WorkoutTypeCount, WorkoutType, WorkoutLinked
+from workout_app.models import WorkoutTypeCount, WorkoutType, WorkoutLinked, Achievement
 
 def createWorkoutTypeCount(pro_file, typename):
     return WorkoutTypeCount.objects.create(profile = pro_file, type_name = typename)
@@ -29,3 +29,50 @@ class test_workoutType_model(TestCase):
     def test_workoutType_count_component(self):
         wt = createWorkoutType('HIIT', True, True, True, None, True, None, True, True, True, None)
         self.assertEquals(wt.first_count_component, None)
+
+def createAchievement(ti_tle, hasspecificworkouttype, hasworkoutcountmin, hasspecificworkouttypecount, hasmintotalweight, hasminreps, hasminsingledistance, hasminsingleduration, hasmintotalduration, hasmaxpace):
+    return Achievement.objects.create(title = ti_tle, has_specific_workoutType = hasspecificworkouttype, has_workout_count_min = hasworkoutcountmin, has_specific_WorkoutTypeCount = hasspecificworkouttypecount, 
+    has_min_total_weight = hasmintotalweight, has_min_reps = hasminreps, has_min_single_distance = hasminsingledistance, has_min_single_duration = hasminsingleduration,
+    has_min_total_duration = hasmintotalduration, has_max_pace = hasmaxpace)
+
+class test_achievements_model(TestCase):
+
+    def test_achivements_title(self):
+        wt = createAchievement('total_earned_points', True, True, True, True, True, True, True, True, True)
+        self.assertEquals(wt.title, 'total_earned_points')
+
+    def test_achivements_has_specific_workoutType(self):
+        wt = createAchievement('total_earned_points', True, True, True, True, True, True, True, True, True)
+        self.assertEquals(wt.has_specific_workoutType, True)
+    
+    def test_achivements_has_workout_count_min(self):
+        wt = createAchievement('total_earned_points', True, True, True, True, True, True, True, True, True)
+        self.assertEquals(wt.has_workout_count_min, True)
+
+    def test_achivements_has_specific_WorkoutTypeCount(self):
+        wt = createAchievement('total_earned_points', True, True, True, True, True, True, True, True, True)
+        self.assertEquals(wt.has_specific_WorkoutTypeCount, True)
+
+    def test_achivements_has_min_total_weight(self):
+        wt = createAchievement('total_earned_points', True, True, True, True, True, True, True, True, True)
+        self.assertEquals(wt.has_min_total_weight, True)
+
+    def test_achivements_has_min_reps(self):
+        wt = createAchievement('total_earned_points', True, True, True, True, True, True, True, True, True)
+        self.assertEquals(wt.has_min_reps, True)
+
+    def test_achivements_has_min_single_distance(self):
+        wt = createAchievement('total_earned_points', True, True, True, True, True, True, True, True, True)
+        self.assertEquals(wt.has_min_single_distance, True)
+
+    def test_achivements_has_min_single_duration(self):
+        wt = createAchievement('total_earned_points', True, True, True, True, True, True, True, True, True)
+        self.assertEquals(wt.has_min_single_duration, True)
+
+    def test_achivements_has_min_total_duration(self):
+        wt = createAchievement('total_earned_points', True, True, True, True, True, True, True, True, True)
+        self.assertEquals(wt.has_min_total_duration, True)
+
+    def test_achivements_has_max_pace(self):
+        wt = createAchievement('total_earned_points', True, True, True, True, True, True, True, True, True)
+        self.assertEquals(wt.has_max_pace, True)
