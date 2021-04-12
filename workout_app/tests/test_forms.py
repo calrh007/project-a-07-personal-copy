@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 from workout_app.forms import WorkoutTypeForm
-from workout_app.models import WorkoutType, WorkoutLinked, WorkoutTypeCount
+from workout_app.models import WorkoutType, WorkoutLinked, WorkoutTypeCount, Achievement
 
 class TestForms(SimpleTestCase):
 
