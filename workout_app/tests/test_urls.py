@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
-from workout_app.views import index, workoutLinkedListView, newWorkoutType, newWorkoutLinked, newWorkoutTypeCount
+from workout_app.views import index, workoutLinkedListView, newWorkoutType, newWorkoutLinked, newWorkoutTypeCount, achievementsView
 
 class TestUrls(SimpleTestCase):
 
@@ -23,3 +23,7 @@ class TestUrls(SimpleTestCase):
     def test_add_workout_type_url_is_resolved(self):
         url = reverse('workout_linked_list')
         self.assertEquals(resolve(url).func, workoutLinkedListView)
+
+    def test_add_workout_achievement(self):
+        url = reverse('achievements')
+        self.assertEquals(resolve(url).func, achievementsView)

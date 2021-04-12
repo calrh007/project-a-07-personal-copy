@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from workout_app.models import WorkoutTypeCount, WorkoutType, WorkoutLinked
+from workout_app.models import WorkoutTypeCount, WorkoutType, WorkoutLinked, Achievement
 import json
 
 class TestViews(TestCase):
@@ -36,5 +36,10 @@ class TestViews(TestCase):
 
     def test_newWorkoutTypeCount_GET(self):
         response = self.client.get(reverse('workout_linked_list'))
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_achievements_GET(self):
+        response = self.client.get(reverse('achievements'))
 
         self.assertEquals(response.status_code, 302)
