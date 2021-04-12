@@ -48,7 +48,7 @@ def achievementEarned(achivement, workouts):
     tf = workouts.all()
     if achivement.has_start_date:
         tf_temp = tf.filter(start_date__gte = achivement.start_date, one_day = True)
-        tf = tf_temp.union(tf.filter(end_date__gte = achivement.start_date, one_day = False))
+        tf = tf_temp | tf.filter(end_date__gte = achivement.start_date, one_day = False)
     if achivement.has_end_date:
         tf = tf.filter(start_date__lte = achivement.end_date)
     if achivement.has_specific_workoutType:
