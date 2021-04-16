@@ -353,7 +353,8 @@ def weather(request):
 
     if request.method == 'POST':
         form = CityForm(request.POST)
-        form.save()
+        if form not in cities:
+            form.save()
 
     form = CityForm()
 
