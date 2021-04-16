@@ -5,7 +5,7 @@ from django.views import generic
 # from .models import Workout
 # from .forms import WorkoutForm
 
-from .forms import WorkoutTypeForm, WorkoutLinkedForm, WorkoutTypeCountForm
+from .forms import WorkoutTypeForm, WorkoutLinkedForm, WorkoutTypeCountForm, CityForm
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from .models import WorkoutLinked
@@ -349,6 +349,12 @@ def weather(request):
 
     cities = City.objects.all()
 
+    if request.method == 'POST':
+        form = CityForm(request.POST)
+        form.save()
+
+    form = CityForm()
+
     weather_stats = []
 
     for city in cities:
@@ -363,6 +369,6 @@ def weather(request):
 
         weather_stats.append(current_weather)
 
-    context = {'weather_stats' : weather_stats}
+    context = {'weather_stats' : weather_stats, 'form' : form}
 
     return render(request, 'workout_app/weather.html', context)
