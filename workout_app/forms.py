@@ -43,5 +43,5 @@ class CityForm(forms.ModelForm):
         model = City
         fields = ['name']
         widgets = {
-            'name' : forms.TextInput(attrs={'placeholder' : 'City Name'}),
+            'name' : forms.TextInput(attrs={'placeholder' : 'Zip Code'}),
         }

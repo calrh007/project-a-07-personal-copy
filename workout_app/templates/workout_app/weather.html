@@ -1,9 +1,12 @@
 {% extends "workout_app/base.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
 
 <h1>What's the Weather Like?</h1>
 <div class="col text-center">
+
 
 <form method="POST">
     {% csrf_token %}
@@ -18,6 +21,8 @@
         </div>
     </div>
 </form>
+
+
 
 <div class="column is-offset-4 is-4">
     {% for weather in weather_stats %}

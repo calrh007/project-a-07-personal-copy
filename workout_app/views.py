@@ -343,9 +343,11 @@ def newWorkoutTypeCount(request):
     return render(request, 'workout_app/add_workout_type_count.html', {'form': form})
 
 def weather(request):
-    url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
+    # url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
     # city = 'Charlottesville'
     # city_weather = requests.get(url.format(city)).json()
+
+    url = 'http://api.openweathermap.org/data/2.5/weather?zip={},us&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
 
     cities = City.objects.all()
 
@@ -361,7 +363,7 @@ def weather(request):
         city_weather = requests.get(url.format(city)).json()
 
         current_weather = {
-            'city' : city,
+            'city' : city_weather['name'],
             'temperature' : city_weather['main']['temp'],
             'description' : city_weather['weather'][0]['description'],
             'icon' : city_weather['weather'][0]['icon']
