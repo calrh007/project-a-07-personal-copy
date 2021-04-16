@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import requests
 from django.views import generic
 # from django.views.generic import CreateView, ListView
 # from .models import Workout
@@ -341,4 +342,18 @@ def newWorkoutTypeCount(request):
     return render(request, 'workout_app/add_workout_type_count.html', {'form': form})
 
 def weather(request):
-    return render(request, 'workout_app/weather.html')
+    url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
+    city = 'Charlottesville'
+    city_weather = requests.get(url.format(city)).json()
+
+    current_weather = {
+        'city' : city,
+        'temperature' : city_weather['main']['temp'],
+        'description' : city_weather['weather'][0]['description'],
+        'icon' : city_weather['weather'][0]['icon']
+    }
+
+    context = {'current_weather' : current_weather}
+
+
+    return render(request, 'workout_app/weather.html', context)
