@@ -339,3 +339,6 @@ def newWorkoutTypeCount(request):
     else:
         form = WorkoutTypeCountForm()
     return render(request, 'workout_app/add_workout_type_count.html', {'form': form})
+
+def weather(request):
+    return render(request, 'workout_app/weather.html')
