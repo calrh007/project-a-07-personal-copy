@@ -163,3 +163,10 @@ class Achievement(models.Model):
     points = models.PositiveIntegerField(default = 10, blank = True, null = True)
     has_max_pace = models.BooleanField(default=False)
     max_pace_per_mile = models.DurationField(null=True, blank=True)
+
+class City(models.Model):
+    name = models.CharField(max_length=30)
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name_plural = 'cities'

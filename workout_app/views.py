@@ -18,6 +18,7 @@ import m26
 
 from .models import Achievement
 from .models import Profile
+from .models import City
 from django.template.defaultfilters import pluralize
 
 LE = 'Please login before viewing or submitting this'
@@ -343,17 +344,25 @@ def newWorkoutTypeCount(request):
 
 def weather(request):
     url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
-    city = 'Charlottesville'
-    city_weather = requests.get(url.format(city)).json()
+    # city = 'Charlottesville'
+    # city_weather = requests.get(url.format(city)).json()
 
-    current_weather = {
-        'city' : city,
-        'temperature' : city_weather['main']['temp'],
-        'description' : city_weather['weather'][0]['description'],
-        'icon' : city_weather['weather'][0]['icon']
-    }
+    cities = City.objects.all()
 
-    context = {'current_weather' : current_weather}
+    weather_stats = []
 
+    for city in cities:
+        city_weather = requests.get(url.format(city)).json()
+
+        current_weather = {
+            'city' : city,
+            'temperature' : city_weather['main']['temp'],
+            'description' : city_weather['weather'][0]['description'],
+            'icon' : city_weather['weather'][0]['icon']
+        }
+
+        weather_stats.append(current_weather)
+
+    context = {'weather_stats' : weather_stats}
 
     return render(request, 'workout_app/weather.html', context)
