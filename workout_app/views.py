@@ -197,6 +197,21 @@ def workoutLinkedListView(request):
         return HttpResponseRedirect('/login/')
     user_workouts = WorkoutLinked.objects.filter(profile=request.user).order_by('-start_date')
 
+    if (request.GET.get('WeatherButton')):
+        current_workout = WorkoutLinked.objects.get(id=request.GET.get('WeatherButton'))
+        # current_weather = current_workout.get(weather)
+        url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
+        city = 'Charlottesville'
+        city_weather = requests.get(url.format(city)).json()
+        weather_info = {
+            'city': city,
+            'temperature': city_weather['main']['temp'],
+            'description': city_weather['weather'][0]['description'],
+            'icon': city_weather['weather'][0]['icon']
+        }
+        context = {'weather_info': weather_info, 'current_workout': current_workout}
+        return render(request, 'workout_app/workout_weather.html', context)
+
     if (request.GET.get('DeleteButton')):
         WorkoutLinked.objects.filter(id=request.GET.get('DeleteButton')).delete()
         return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
@@ -375,3 +390,20 @@ def weather(request):
     context = {'weather_stats' : weather_stats, 'form' : form}
 
     return render(request, 'workout_app/weather.html', context)
+
+# def workout_weather(request):
+#
+#     url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
+#     city = 'Charlottesville'
+#     city_weather = requests.get(url.format(city)).json()
+#
+#     weather_info = {
+#         'city' : city,
+#         'temperature' : city_weather['main']['temp'],
+#         'description' : city_weather['weather'][0]['description'],
+#         'icon' : city_weather['weather'][0]['icon']
+#     }
+#
+#     context = {'weather_info' : weather_info}
+#
+#     return render(request, 'workout_app/workout_weather.html', context)
