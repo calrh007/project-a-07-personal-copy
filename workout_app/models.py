@@ -96,6 +96,13 @@ class WorkoutLinked(models.Model):
         unit_choices=(("lb", "lb"), ("kg", "kg"))
     )
 
+    def get_year(self):
+        return self.start_date.year
+    def get_month(self):
+        return self.start_date.month
+    def get_day(self):
+        return self.start_date.day
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 ICON_CHOICES = sorted([(fn, fn) for fn in os.listdir(BASE_DIR / 'static' / 'icons')])
 
