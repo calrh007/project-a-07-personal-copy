@@ -97,11 +97,11 @@ class WorkoutLinked(models.Model):
     )
 
     def get_year(self):
-        return self.start_date.year
+        return self.start_date.strftime('%Y')
     def get_month(self):
-        return self.start_date.month
+        return self.start_date.strftime('%m')
     def get_day(self):
-        return self.start_date.day
+        return self.start_date.strftime('%d')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ICON_CHOICES = sorted([(fn, fn) for fn in os.listdir(BASE_DIR / 'static' / 'icons')])

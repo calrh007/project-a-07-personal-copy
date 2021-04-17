@@ -202,21 +202,23 @@ def workoutLinkedListView(request):
 
     if (request.GET.get('WeatherButton')):
         current_workout = WorkoutLinked.objects.get(id=request.GET.get('WeatherButton'))
-        y = current_workout.get_year()
-        m = current_workout.get_month()
-        d = current_workout.get_day()
-        start = str(datetime.datetime(y, m, d, 0, 0).timestamp())
-        end = str(datetime.datetime(y, m, d, 0, 0).timestamp())
+        y = int(current_workout.get_year())
+        m = int(current_workout.get_month())
+        d = int(current_workout.get_day())
+        start = str(int(datetime.datetime(y, m, d, 12, 0, 0).timestamp()))
+        end = str(int(datetime.datetime(y, m, d, 12, 0, 0).timestamp()))
 
-        zip = '22901'
-        url = 'http://api.openweathermap.org/data/2.5/weather?zip=' + zip + ',us&type=hour&start=' + start + '&end=' + end + '&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
+        city = 'charlottesville'
+
+        url = 'http://history.openweathermap.org/data/2.5/history/city?q=' + city + ',us&type=hour&start=' + start + '&end=' + end + '&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
+
         city_weather = requests.get(url).json()
 
         weather_info = {
-            'city': city_weather['name'],
-            'temperature': city_weather['main']['temp'],
-            'description': city_weather['weather'][0]['description'],
-            'icon': city_weather['weather'][0]['icon']
+            'city': city,
+            'temperature': "{0:.2f}".format( 1.8 * (city_weather['list'][0]['main']['temp'] - 273) + 32 ),
+            'description': city_weather['list'][0]['weather'][0]['description'],
+            'icon': city_weather['list'][0]['weather'][0]['icon']
         }
         context = {'weather_info': weather_info, 'current_workout': current_workout}
         return render(request, 'workout_app/workout_weather.html', context)
