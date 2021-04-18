@@ -5,3 +5,4 @@ django-measurement
 django-crispy-forms
 m26
 Pillow
+pgeocode

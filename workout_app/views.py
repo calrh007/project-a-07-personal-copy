@@ -23,6 +23,7 @@ from django.template.defaultfilters import pluralize
 
 import datetime
 
+import pgeocode
 
 LE = 'Please login before viewing or submitting this'
 
@@ -208,14 +209,21 @@ def workoutLinkedListView(request):
         start = str(int(datetime.datetime(y, m, d, 12, 0, 0).timestamp()))
         end = str(int(datetime.datetime(y, m, d, 12, 0, 0).timestamp()))
 
-        city = 'charlottesville'
+        # city = 'charlottesville'
 
-        url = 'http://history.openweathermap.org/data/2.5/history/city?q=' + city + ',us&type=hour&start=' + start + '&end=' + end + '&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
+        # url = 'http://history.openweathermap.org/data/2.5/history/city?q=' + city + ',us&type=hour&start=' + start + '&end=' + end + '&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
+
+        nomi = pgeocode.Nominatim('us')
+        postal_query = nomi.query_postal_code(current_workout.zipcode)
+        lat = str(postal_query.latitude)
+        lon = str(postal_query.longitude)
+
+        url = 'http://history.openweathermap.org/data/2.5/history/city?lat=' + lat + '&lon=' + lon + '&type=hour&start=' + start + '&end=' + end + '&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
 
         city_weather = requests.get(url).json()
 
         weather_info = {
-            'city': city,
+            'city': postal_query.place_name,
             'temperature': "{0:.2f}".format( 1.8 * (city_weather['list'][0]['main']['temp'] - 273) + 32 ),
             'description': city_weather['list'][0]['weather'][0]['description'],
             'icon': city_weather['list'][0]['weather'][0]['icon']
