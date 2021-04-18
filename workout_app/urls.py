@@ -2,8 +2,6 @@ from django.urls import include, path
 
 from . import views
 
-from django.conf import settings
-from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LogoutView
 # from .views import AddWorkoutView
@@ -22,4 +20,4 @@ urlpatterns = [
     path('workout_linked_list/', views.workoutLinkedListView, name='workout_linked_list'),
     path('workout_summary/', views.workoutSummary, name='workout_summary'),
     path('achievements/', views.achievementsView, name='achievements'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

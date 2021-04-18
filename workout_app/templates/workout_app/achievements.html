@@ -6,8 +6,7 @@
     <h1 style="padding:15px">Achievements</h1>
 {% if achievements_calc %}
 
-    <ul>
-        <div class="card mx-auto mb-3" style="width:40%">
+        <div class="card mx-auto mb-3" style="max-width: 45rem;">
             <div class="card-header">
                 <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">Total Possible Points</span>
                 <span style="float:right">
@@ -15,7 +14,7 @@
                 </span></h2>
             </div>
         </div>
-        <div class="card mx-auto mb-3" style="width:40%">
+        <div class="card mx-auto mb-3" style="max-width: 45rem;">
             <div class="card-header">
                 <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">Total Points Earned</span>
                 <span style="float:right">
@@ -23,7 +22,7 @@
                 </span></h2>
             </div>
         </div>
-        <div class="card mx-auto mb-3" style="width:40%">
+        <div class="card mx-auto mb-3" style="max-width: 45rem;">
             <div class="card-header">
                 <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">Total Points Unearned</span>
                 <span style="float:right">
@@ -31,7 +30,6 @@
                 </span></h2>
             </div>
         </div>
-    </ul>
 
     {% for ach, earned in achievements_calc %}
         {% if earned %}
