@@ -4,9 +4,8 @@
 <div class="col text-center">
     <h1 style="padding:15px">My Workouts</h1>
 {% if user_workouts %}
-    <ul>
     {% for workout_linked in user_workouts %}
-        <div class="card mx-auto mb-3" style="width:40%">
+        <div class="card mx-auto mb-3" style="max-width: 30rem;">
             <div class="card-header">
                 <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">{{ workout_linked.workoutType }} </span>
                 <span style="float:right; font-weight:lighter; font-size:15px"><em>{{ workout_linked.start_date }}
@@ -51,7 +50,6 @@
             </div>
         </div>
     {% endfor %}
-    </ul>
 {% else %}
     <p>No workouts are available.</p>
 {% endif %}
