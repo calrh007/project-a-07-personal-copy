@@ -25,6 +25,9 @@ import datetime
 
 import pgeocode
 
+from django.contrib.auth.models import User
+from django.db.models import Sum
+
 LE = 'Please login before viewing or submitting this'
 
 def index(request):
@@ -250,6 +253,74 @@ def workoutLinkedListView(request):
         return render(request, 'workout_app/edit_workout_linked.html', {'form': form})
 
     return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
+
+def leaderboard_context():
+    leader_board_context = []
+    zero_dist = Distance()
+    zero_dur = timedelta()
+    for wt in WorkoutType.objects.all():
+        leader_board_context.append((wt, []))
+        dur_list = []
+        dist_list = []
+        for user in User.objects.all():
+            wotc = WorkoutLinked.objects.filter(profile=user, workoutType=wt)
+            if wt.has_duration:
+                dur_tot = wotc.aggregate(Sum('duration'))['duration__sum']
+                if dur_tot is not None and dur_tot > zero_dur:
+                    dur_list.append((dur_tot, user))
+            if wt.has_distance_comp:
+                dist_tot = wotc.aggregate(Sum('dist'))['dist__sum']
+                if dist_tot is not None and dist_tot > zero_dist:
+                    dist_list.append((dist_tot, user))
+        for l, t in [(dur_list, 'Total Duration'), (dist_list, 'Total Distance')]:
+            if l:
+                l.sort(reverse=True)
+                list_proc = [(1, l[0][0], l[0][1])]
+                for i in range(1, len(l)):
+                    if l[i][0] == l[i - 1][0]:
+                        list_proc.append((list_proc[-1][0], l[i][0], l[i][1]))
+                    else:
+                        list_proc.append((list_proc[-1][0] + 1, l[i][0], l[i][1]))
+                leader_board_context[-1][1].append((t, list_proc))
+        if not leader_board_context[-1][0]:
+            leader_board_context.pop()
+    leader_board_context.append(('Workout Count Components', []))
+    for ct in WorkoutTypeCount.objects.all():
+        ct_list = []
+        for user in User.objects.all():
+            cc = 0
+            wotc_fc = WorkoutLinked.objects.filter(profile=user, workoutType__has_first_count_component = True, workoutType__first_count_component = ct)
+            wotc_fc_sum = wotc_fc.aggregate(Sum('raw_count'))['raw_count__sum']
+            if wotc_fc_sum is not None:
+                cc += wotc_fc_sum
+            wotc_sc = WorkoutLinked.objects.filter(profile=user, workoutType__has_second_count_component = True, workoutType__second_count_component = ct)
+            wotc_sc_sum = wotc_sc.aggregate(Sum('second_raw_count'))['second_raw_count__sum']
+            if wotc_sc_sum is not None:
+                cc += wotc_sc_sum
+            if cc > 0:
+                ct_list.append((cc, user))
+        if ct_list:
+            ct_list.sort(reverse=True)
+            ct_list_proc = [(1, ct_list[0][0], ct_list[0][1])]
+            for i in range(1, len(ct_list)):
+                if l[i][0] == l[i - 1][0]:
+                    ct_list_proc.append((ct_list_proc[-1][0], ct_list[i][0], ct_list[i][1]))
+                else:
+                    ct_list_proc.append((ct_list_proc[-1][0] + 1, ct_list[i][0], ct_list[i][1]))
+            leader_board_context[-1][1].append(('Total ' + str(ct), ct_list_proc))
+    if not leader_board_context[-1][0]:
+        leader_board_context.pop()
+    # print(leader_board_context)
+    # return []
+    return leader_board_context
+
+def Leaderboard(request):
+    if request.user.is_anonymous:
+        messages.error(request, LE)
+        return HttpResponseRedirect('/login/')
+    context = {}
+    context['leader_board'] = leaderboard_context()
+    return render(request, 'workout_app/leaderboard.html', context)
 
 def workoutSummary(request):
     if request.user.is_anonymous:

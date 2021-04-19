@@ -1,0 +1,35 @@
+{% extends "workout_app/base.html" %}
+
+{% block content %}
+<div class="col text-center">
+    <h1 style="padding:15px">Leaderboards</h1>
+    {% if leader_board %}
+        {% for wt, lbl in leader_board %}
+            <h2 style="padding:15px; font-weight:bold">{{wt}}</h2>
+            {% for cat_title, lb_list in lbl %}
+                <h4 style="padding:5px">{{cat_title}}</h4>
+                <table class="table mx-auto" style="max-width: 60rem;">
+                    <thead>
+                      <tr>
+                        <th scope="col" style="width: 10%">#</th>
+                        <th scope="col" style="width: 45%">Username</th>
+                        <th scope="col" style="width: 45%">{{cat_title}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for num, cat_count, user in lb_list %}
+                        <tr>
+                            <th scope="row">{{num}}</th>
+                            <td>{{user.username}}</td>
+                            <td>{{cat_count}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endfor %}
+        {% endfor %}
+    {% else %}
+        <p>No such leaderboards are available.</p>
+    {% endif %}
+
+{% endblock %}
