@@ -1,10 +1,11 @@
 from django.shortcuts import render
+import requests
 from django.views import generic
 # from django.views.generic import CreateView, ListView
 # from .models import Workout
 # from .forms import WorkoutForm
 
-from .forms import WorkoutTypeForm, WorkoutLinkedForm, WorkoutTypeCountForm
+from .forms import WorkoutTypeForm, WorkoutLinkedForm, WorkoutTypeCountForm, CityForm
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from .models import WorkoutLinked
@@ -17,7 +18,12 @@ import m26
 
 from .models import Achievement
 from .models import Profile
+from .models import City
 from django.template.defaultfilters import pluralize
+
+import datetime
+
+import pgeocode
 
 LE = 'Please login before viewing or submitting this'
 
@@ -195,6 +201,36 @@ def workoutLinkedListView(request):
         return HttpResponseRedirect('/login/')
     user_workouts = WorkoutLinked.objects.filter(profile=request.user).order_by('-start_date')
 
+    if (request.GET.get('WeatherButton')):
+        current_workout = WorkoutLinked.objects.get(id=request.GET.get('WeatherButton'))
+        y = int(current_workout.get_year())
+        m = int(current_workout.get_month())
+        d = int(current_workout.get_day())
+        start = str(int(datetime.datetime(y, m, d, 12, 0, 0).timestamp()))
+        end = str(int(datetime.datetime(y, m, d, 12, 0, 0).timestamp()))
+
+        # city = 'charlottesville'
+
+        # url = 'http://history.openweathermap.org/data/2.5/history/city?q=' + city + ',us&type=hour&start=' + start + '&end=' + end + '&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
+
+        nomi = pgeocode.Nominatim('us')
+        postal_query = nomi.query_postal_code(current_workout.zipcode)
+        lat = str(postal_query.latitude)
+        lon = str(postal_query.longitude)
+
+        url = 'http://history.openweathermap.org/data/2.5/history/city?lat=' + lat + '&lon=' + lon + '&type=hour&start=' + start + '&end=' + end + '&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
+
+        city_weather = requests.get(url).json()
+
+        weather_info = {
+            'city': postal_query.place_name,
+            'temperature': "{0:.2f}".format( 1.8 * (city_weather['list'][0]['main']['temp'] - 273) + 32 ),
+            'description': city_weather['list'][0]['weather'][0]['description'],
+            'icon': city_weather['list'][0]['weather'][0]['icon']
+        }
+        context = {'weather_info': weather_info, 'current_workout': current_workout}
+        return render(request, 'workout_app/workout_weather.html', context)
+
     if (request.GET.get('DeleteButton')):
         WorkoutLinked.objects.filter(id=request.GET.get('DeleteButton')).delete()
         return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
@@ -339,3 +375,37 @@ def newWorkoutTypeCount(request):
     else:
         form = WorkoutTypeCountForm()
     return render(request, 'workout_app/add_workout_type_count.html', {'form': form})
+
+# def weather(request):
+#     # url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
+#     # city = 'Charlottesville'
+#     # city_weather = requests.get(url.format(city)).json()
+
+#     url = 'http://api.openweathermap.org/data/2.5/weather?zip={},us&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
+
+#     cities = City.objects.all()
+
+#     if request.method == 'POST':
+#         form = CityForm(request.POST)
+#         if form not in cities:
+#             form.save()
+
+#     form = CityForm()
+
+#     weather_stats = []
+
+#     for city in cities:
+#         city_weather = requests.get(url.format(city)).json()
+
+#         current_weather = {
+#             'city' : city_weather['name'],
+#             'temperature' : city_weather['main']['temp'],
+#             'description' : city_weather['weather'][0]['description'],
+#             'icon' : city_weather['weather'][0]['icon']
+#         }
+
+#         weather_stats.append(current_weather)
+
+#     context = {'weather_stats' : weather_stats, 'form' : form}
+
+#     return render(request, 'workout_app/weather.html', context)

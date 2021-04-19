@@ -40,12 +40,18 @@
 
 
                 <form action="" method="get">
-                    <button class = "btn btn-default" name="DeleteButton" value="{{ workout_linked.id }}">Delete</button>
+                    <button class = "btn btn-outline-secondary" name="WeatherButton" value="{{ workout_linked.id }}">Weather</button>
+                </form>
+
+                <div class="text-right">
+                <form action="" method="get">
+                    <button class = "btn btn-secondary mr-2 mb-2" name="EditButton" value="{{ workout_linked.id }}">Edit</button>
                 </form>
 
                 <form action="" method="get">
-                    <button class = "btn btn-default" name="EditButton" value="{{ workout_linked.id }}">Edit</button>
+                    <button class = "btn btn-dark mr-2 mb-2" name="DeleteButton" value="{{ workout_linked.id }}">Delete</button>
                 </form>
+                 </div>
 
             </div>
         </div>

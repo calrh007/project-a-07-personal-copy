@@ -30,6 +30,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     achievement_points = models.PositiveIntegerField(default = 0)
     achievement_num = models.PositiveIntegerField(default = 0)
+    zipcode = models.CharField(max_length=5, default='22904')
     def __str__(self):
         return str(self.user)
 
@@ -66,6 +67,7 @@ INTENSITY_CHOICES = (
 class WorkoutLinked(models.Model):
     workoutType = models.ForeignKey(WorkoutType, on_delete=models.CASCADE)
     profile = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    zipcode = models.CharField(max_length=5, default='22904')
     start_date = models.DateField(default=datetime.date.today)
     one_day = models.BooleanField(default=True)
     end_date = models.DateField(default=datetime.date.today)
@@ -94,6 +96,13 @@ class WorkoutLinked(models.Model):
         measurement=Weight,
         unit_choices=(("lb", "lb"), ("kg", "kg"))
     )
+
+    def get_year(self):
+        return self.start_date.strftime('%Y')
+    def get_month(self):
+        return self.start_date.strftime('%m')
+    def get_day(self):
+        return self.start_date.strftime('%d')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ICON_CHOICES = sorted([(fn, fn) for fn in os.listdir(BASE_DIR / 'static' / 'icons')])
@@ -162,3 +171,10 @@ class Achievement(models.Model):
     points = models.PositiveIntegerField(default = 10, blank = True, null = True)
     has_max_pace = models.BooleanField(default=False)
     max_pace_per_mile = models.DurationField(null=True, blank=True)
+
+class City(models.Model):
+    name = models.CharField(max_length=30)
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name_plural = 'cities'

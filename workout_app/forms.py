@@ -1,7 +1,7 @@
 from django import forms
 # from .models import Workout
 
-from .models import WorkoutType, WorkoutLinked, WorkoutTypeCount
+from .models import WorkoutType, WorkoutLinked, WorkoutTypeCount, City
 
 # class WorkoutForm(forms.ModelForm):
 #     class Meta:
@@ -37,3 +37,11 @@ class WorkoutTypeCountForm(forms.ModelForm):
     class Meta:
         model = WorkoutTypeCount
         exclude = ['profile']
+
+class CityForm(forms.ModelForm):
+    class Meta:
+        model = City
+        fields = ['name']
+        widgets = {
+            'name' : forms.TextInput(attrs={'placeholder' : 'Zip Code'}),
+        }

@@ -20,4 +20,6 @@ urlpatterns = [
     path('workout_linked_list/', views.workoutLinkedListView, name='workout_linked_list'),
     path('workout_summary/', views.workoutSummary, name='workout_summary'),
     path('achievements/', views.achievementsView, name='achievements'),
-]
+    # path('weather/', views.weather, name='weather'),
+ ] 
+ # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
