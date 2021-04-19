@@ -2,34 +2,50 @@
 
 {% block content %}
 
-<h1 style="text-align:center; padding:15px">The Weather On {{ current_workout.start_date }} </h1>
+<h1 style="text-align:center; padding:15px">The Weather for the Selected Workout</h1>
 
+{% comment %}
 <div class="col text-center">
 
-
-<div class="box">
-    <article class="media">
-        <div class="media-left">
-            <figure class="image is-50x50">
-                <img src="http://openweathermap.org/img/w/{{ weather_info.icon }}.png" alt="Image">
-            </figure>
-        </div>
-        <div class="media-content">
-            <div class="content">
-                <p>
-                    <span class="title">{{ weather_info.city }}</span>
-                    <br>
-                    <span class="subtitle">{{ weather_info.temperature }}° F</span>
-                    <br> {{ weather_info.description }}
-                </p>
+    <div class="box">
+        <article class="media">
+            <div class="media-left">
+                <figure class="image is-50x50">
+                    <img src="http://openweathermap.org/img/w/{{ weather_info.icon }}.png" alt="Image">
+                </figure>
             </div>
-        </div>
-    </article>
+            <div class="media-content">
+                <div class="content">
+                    <p>
+                        <span class="title">{{ weather_info.city }}</span>
+                        <br>
+                        <span class="subtitle">{{ weather_info.temperature }}° F</span>
+                        <br> {{ weather_info.description }}
+                    </p>
+                </div>
+            </div>
+        </article>
+    </div>
+    <button onclick="location.href='{% url 'workout_linked_list' %}'" class = "btn btn-outline-secondary" name="BackButton">Back</button>
+</div>
+{% endcomment %}
+
+
+<div class="card mx-auto mb-3" style="max-width: 30rem;">
+    <div class="card-header">
+        <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px"> {{ weather_info.city }} </span>
+            <span style="float:right; font-weight:lighter; font-size:15px"><em>{{ current_workout.start_date }}</em></span>
+        </h2>
+    </div>
+    <div class="card-body" style="text-align:left">
+        <p style="color: black"><b>Conditions: </b> <span style="font-weight:lighter; font-size:20px">{{ weather_info.description }}</span></p>
+        <p style="color: black"><b>Temperature: </b> <span style="font-weight:lighter; font-size:20px">{{ weather_info.temperature }}° F</span></p>
+    </div>
+    <p style="text-align:center;"><img src="http://openweathermap.org/img/w/{{ weather_info.icon }}.png" alt="Image"></p>
 </div>
 
-<button onclick="location.href='{% url 'workout_linked_list' %}'" class = "btn btn-outline-secondary" name="BackButton">Back</button>
-
-
+<div class="col text-center">
+    <button onclick="location.href='{% url 'workout_linked_list' %}'" class = "btn btn-outline-secondary" name="BackButton">Back</button>
 </div>
 
 {% endblock %}
