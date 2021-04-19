@@ -274,7 +274,7 @@ def leaderboard_context():
                     dist_list.append((dist_tot, user))
         for l, t in [(dur_list, 'Total Duration'), (dist_list, 'Total Distance')]:
             if l:
-                l.sort(reverse=True)
+                l.sort(key=lambda x:x[0], reverse=True)
                 list_proc = [(1, l[0][0], l[0][1])]
                 for i in range(1, len(l)):
                     if l[i][0] == l[i - 1][0]:
@@ -300,7 +300,7 @@ def leaderboard_context():
             if cc > 0:
                 ct_list.append((cc, user))
         if ct_list:
-            ct_list.sort(reverse=True)
+            ct_list.sort(key=lambda x:x[0], reverse=True)
             ct_list_proc = [(1, ct_list[0][0], ct_list[0][1])]
             for i in range(1, len(ct_list)):
                 if l[i][0] == l[i - 1][0]:
