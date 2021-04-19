@@ -303,7 +303,7 @@ def leaderboard_context():
             ct_list.sort(key=lambda x:x[0], reverse=True)
             ct_list_proc = [(1, ct_list[0][0], ct_list[0][1])]
             for i in range(1, len(ct_list)):
-                if l[i][0] == l[i - 1][0]:
+                if ct_list[i][0] == ct_list[i - 1][0]:
                     ct_list_proc.append((ct_list_proc[-1][0], ct_list[i][0], ct_list[i][1]))
                 else:
                     ct_list_proc.append((ct_list_proc[-1][0] + 1, ct_list[i][0], ct_list[i][1]))
