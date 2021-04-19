@@ -376,36 +376,36 @@ def newWorkoutTypeCount(request):
         form = WorkoutTypeCountForm()
     return render(request, 'workout_app/add_workout_type_count.html', {'form': form})
 
-def weather(request):
-    # url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
-    # city = 'Charlottesville'
-    # city_weather = requests.get(url.format(city)).json()
+# def weather(request):
+#     # url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
+#     # city = 'Charlottesville'
+#     # city_weather = requests.get(url.format(city)).json()
 
-    url = 'http://api.openweathermap.org/data/2.5/weather?zip={},us&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
+#     url = 'http://api.openweathermap.org/data/2.5/weather?zip={},us&units=imperial&appid=4b11880620bbfa64946645fe86d99eb5'
 
-    cities = City.objects.all()
+#     cities = City.objects.all()
 
-    if request.method == 'POST':
-        form = CityForm(request.POST)
-        if form not in cities:
-            form.save()
+#     if request.method == 'POST':
+#         form = CityForm(request.POST)
+#         if form not in cities:
+#             form.save()
 
-    form = CityForm()
+#     form = CityForm()
 
-    weather_stats = []
+#     weather_stats = []
 
-    for city in cities:
-        city_weather = requests.get(url.format(city)).json()
+#     for city in cities:
+#         city_weather = requests.get(url.format(city)).json()
 
-        current_weather = {
-            'city' : city_weather['name'],
-            'temperature' : city_weather['main']['temp'],
-            'description' : city_weather['weather'][0]['description'],
-            'icon' : city_weather['weather'][0]['icon']
-        }
+#         current_weather = {
+#             'city' : city_weather['name'],
+#             'temperature' : city_weather['main']['temp'],
+#             'description' : city_weather['weather'][0]['description'],
+#             'icon' : city_weather['weather'][0]['icon']
+#         }
 
-        weather_stats.append(current_weather)
+#         weather_stats.append(current_weather)
 
-    context = {'weather_stats' : weather_stats, 'form' : form}
+#     context = {'weather_stats' : weather_stats, 'form' : form}
 
-    return render(request, 'workout_app/weather.html', context)
+#     return render(request, 'workout_app/weather.html', context)
