@@ -30,7 +30,6 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     achievement_points = models.PositiveIntegerField(default = 0)
     achievement_num = models.PositiveIntegerField(default = 0)
-    profilePic = models.ImageField(default='defaultProfilePic.jpg', upload_to='userProfilePics')
     zipcode = models.CharField(max_length=5, default='22904')
     def __str__(self):
         return str(self.user)

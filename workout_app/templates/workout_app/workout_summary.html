@@ -5,9 +5,8 @@
     <h1 style="padding:15px">Workout Summary Demo</h1>
     <h2 style="padding:15px">Workout Type Summaries</h2>
     {% if wts %}
-        <ul>
         {% for wt, wta in wts.items %}
-        <div class="card mx-auto mb-3" style="width:40%">
+        <div class="card mx-auto mb-3" style="max-width: 30rem;">
             <div class="card-header">
                 <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">{{ wt }} </span>
                 </h2>
@@ -19,15 +18,13 @@
             </div>
         </div>
         {% endfor %}
-        </ul>
     {% else %}
         <p>No workout type summaries are available.</p>
     {% endif %}
     <h2 style="padding:15px">Count Type Summaries</h2>
     {% if cts %}
-        <ul>
         {% for wtc, c in cts.items %}
-        <div class="card mx-auto mb-3" style="width:40%">
+        <div class="card mx-auto mb-3" style="max-width: 30rem;">
             <div class="card-header">
                 <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">{{ wtc }} </span>
                 <span style="float:right">
@@ -36,7 +33,6 @@
             </div>
         </div>
         {% endfor %}
-        </ul>
     {% else %}
         <p>No workout count type summaries are available.</p>
     {% endif %}
