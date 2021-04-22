@@ -145,6 +145,7 @@ try:
     django_heroku.settings(locals())
     SECURE_SSL_REDIRECT = True # Security GP HTTP to HTTPS redirect
 except ImportError:
+    SECURE_SSL_REDIRECT = False
     found = False
 
 # for login
