@@ -143,6 +143,7 @@ try:
     # Configure Django App for Heroku.
     import django_heroku
     django_heroku.settings(locals())
+    SECURE_SSL_REDIRECT = True # Security GP HTTP to HTTPS redirect
 except ImportError:
     found = False
 
