@@ -60,7 +60,7 @@ html,body {
   margin: 0px;
   padding: 0px;
   overflow-x: hidden; 
-  font-family: 'Geometria';
+  /* font-family: 'Geometria'; */
   line-height: 1.8;
 }
 
@@ -233,7 +233,7 @@ p{
 
 .navbar-brand{
   background: url("../assets/images/logo.png") left center no-repeat;
-  padding:0px 90px;
+  /* padding:0px 90px; */
 }
 
 .page-section{
