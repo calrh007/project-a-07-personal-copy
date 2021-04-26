@@ -5,14 +5,16 @@
     <h1 style="padding:15px">My Workouts</h1>
 {% if user_workouts %}
     {% for workout_linked in user_workouts %}
-        <div class="card mx-auto mb-3" style="max-width: 30rem;">
-            <div class="card-header">
-                <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">{{ workout_linked.workoutType }} </span>
-                <span style="float:right; font-weight:lighter; font-size:15px"><em>{{ workout_linked.start_date }}
-                {% if not workout_linked.one_day %}
-                    - {{workout_linked.end_date}}
-                {% endif %}
-                </em></span></h2>
+        <div class="card mx-auto mb-3" style="max-width: 30rem">
+            <div class="card-header" style="background-color:#eef4fe">
+                <div class="text-center">
+                    <h2 style="font-weight:bold; font-weight:bold; font-size:25px">{{ workout_linked.workoutType }}</h2>
+                    <h6 style="font-size:15px">{{ workout_linked.start_date }}
+                    {% if not workout_linked.one_day %}
+                        - {{workout_linked.end_date}}
+                    {% endif %}
+                    </h6>
+                </div>
             </div>
             <div class="card-body" style="text-align:left">
                 {% if workout_linked.workoutType.has_intensity %}
