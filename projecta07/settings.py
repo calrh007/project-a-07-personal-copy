@@ -141,14 +141,18 @@ MEDIA_URL = '/profilePics/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'profilePics/')
 
 # Activate Django-Heroku
-
+'''
 try:
     # Configure Django App for Heroku.
     import django_heroku
     django_heroku.settings(locals())
+<<<<<<< Updated upstream
+=======
+    SECURE_SSL_REDIRECT = False # Security GP HTTP to HTTPS redirect
+>>>>>>> Stashed changes
 except ImportError:
     found = False
-
+'''
 # for login
 
 AUTHENTICATION_BACKENDS = (

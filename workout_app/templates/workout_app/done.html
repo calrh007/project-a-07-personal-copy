@@ -1,0 +1,14 @@
+{% extends "workout_app/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <h2> Your workout is submitted!</h2>
+
+    {% for form in form_data %}
+        {{form}}
+
+    {% endfor %}
+
+{% endblock %}

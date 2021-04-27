@@ -9,6 +9,11 @@ from django.contrib.auth.views import LogoutView
 # from .views import AddWorkoutView
 # from .views import WorkoutListView
 
+from .forms import ContactForm1, ContactForm2, ContactForm3, ContactForm4
+from .views import newWorkoutLinked, show_message_form_condition
+
+contact_forms = [ContactForm1, ContactForm2, ContactForm3, ContactForm4]
+
 urlpatterns = [
     path('', views.index, name='index'),
     path('accounts/', include('allauth.urls')),
@@ -17,7 +22,10 @@ urlpatterns = [
     # path('add_workout/', AddWorkoutView.as_view(), name='add_workout'),
     # path('add_workout/workout_list', WorkoutListView.as_view(), name='workout_list'),
     path('add_workout_type/', views.newWorkoutType, name='add_workout_type'),
-    path('add_workout_linked/', views.newWorkoutLinked, name='add_workout_linked'),
+    # path('add_workout_linked/', views.newWorkoutLinked, name='add_workout_linked'),
+    path('add_workout_linked/', newWorkoutLinked.as_view(contact_forms,
+        condition_dict={'1': show_message_form_condition},
+    ), name='add_workout_linked'),
     path('add_workout_type_count/', views.newWorkoutTypeCount, name='add_workout_type_count'),
     path('workout_linked_list/', views.workoutLinkedListView, name='workout_linked_list'),
     path('workout_summary/', views.workoutSummary, name='workout_summary'),

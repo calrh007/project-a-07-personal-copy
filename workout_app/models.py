@@ -7,6 +7,7 @@ from measurement.measures import Distance, Weight
 
 # from django.conf import settings
 import datetime
+from datetime import timedelta
 
 from pathlib import Path
 import os
@@ -30,7 +31,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     achievement_points = models.PositiveIntegerField(default = 0)
     achievement_num = models.PositiveIntegerField(default = 0)
-    profilePic = models.ImageField(default='defaultProfilePic.jpg', upload_to='userProfilePics')
+    zipcode = models.CharField(max_length=5, default='22904')
     def __str__(self):
         return str(self.user)
 
@@ -67,19 +68,18 @@ INTENSITY_CHOICES = (
 class WorkoutLinked(models.Model):
     workoutType = models.ForeignKey(WorkoutType, on_delete=models.CASCADE)
     profile = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    zipcode = models.CharField(max_length=5, default='22904')
     start_date = models.DateField(default=datetime.date.today)
     one_day = models.BooleanField(default=True)
     end_date = models.DateField(default=datetime.date.today)
-    duration = models.DurationField(null=True, blank=True)
+    duration = models.DurationField(blank = True)
     intensity = models.CharField(
         max_length = 2,
         choices = INTENSITY_CHOICES,
         default = 'L'
     )
     dist = MeasurementField(
-        null=True,
-        blank=True,
-        default=0,
+        blank = True,
         measurement=Distance,
         unit_choices=(("mi", "mi"), ("km", "km"), ("ft", "ft"), ("m", "m"))
     )
@@ -89,15 +89,28 @@ class WorkoutLinked(models.Model):
     raw_set = models.PositiveIntegerField(default = 1)
     raw_rep = models.PositiveIntegerField(default = 1)
     weight = MeasurementField(
-        null=True,
-        blank=True,
-        default=0,
+        blank = True,
         measurement=Weight,
         unit_choices=(("lb", "lb"), ("kg", "kg"))
     )
 
+    def get_year(self):
+        return self.start_date.strftime('%Y')
+    def get_month(self):
+        return self.start_date.strftime('%m')
+    def get_day(self):
+        return self.start_date.strftime('%d')
+    def save(self, *args, **kwargs):
+        if self.dist is None:
+            self.dist = Distance()
+        if self.weight is None:
+            self.weight = Weight()
+        if self.duration is None:
+            self.duration = timedelta()
+        super(WorkoutLinked, self).save(*args, **kwargs)
+
 BASE_DIR = Path(__file__).resolve().parent.parent
-ICON_CHOICES = [(fn, fn) for fn in os.listdir(BASE_DIR / 'static' / 'icons')]
+ICON_CHOICES = sorted([(fn, fn) for fn in os.listdir(BASE_DIR / 'static' / 'icons')])
 
 class Achievement(models.Model):
     title = models.CharField(max_length=30, default='')
@@ -163,3 +176,10 @@ class Achievement(models.Model):
     points = models.PositiveIntegerField(default = 10, blank = True, null = True)
     has_max_pace = models.BooleanField(default=False)
     max_pace_per_mile = models.DurationField(null=True, blank=True)
+
+class City(models.Model):
+    name = models.CharField(max_length=30)
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name_plural = 'cities'

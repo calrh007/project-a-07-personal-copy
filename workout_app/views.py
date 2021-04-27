@@ -4,7 +4,8 @@ from django.views import generic
 # from .models import Workout
 # from .forms import WorkoutForm
 
-from .forms import WorkoutTypeForm, WorkoutLinkedForm, WorkoutTypeCountForm
+from .forms import WorkoutTypeForm, WorkoutTypeCountForm
+#from .forms import WorkoutLinkedForm
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from .models import WorkoutLinked
@@ -18,6 +19,14 @@ import m26
 from .models import Achievement
 from .models import Profile
 from django.template.defaultfilters import pluralize
+
+from django.forms import modelform_factory
+from django.shortcuts import redirect
+from django.urls import reverse
+from django.views.generic import FormView
+from .forms import WorkoutTypeForm
+
+from formtools.wizard.views import SessionWizardView
 
 LE = 'Please login before viewing or submitting this'
 
@@ -310,6 +319,7 @@ def newWorkoutType(request):
         form = WorkoutTypeForm()
     return render(request, 'workout_app/add_workout_type.html', {'form': form})
 
+'''
 def newWorkoutLinked(request):
     if request.user.is_anonymous:
         messages.error(request, LE)
@@ -324,6 +334,22 @@ def newWorkoutLinked(request):
     else:
         form = WorkoutLinkedForm()
     return render(request, 'workout_app/add_workout_linked.html', {'form': form})
+'''
+
+# TO DO: check conditions based on workout type
+def show_message_form_condition(wizard):
+    cleaned_data = wizard.get_cleaned_data_for_step('0') or {}
+    return cleaned_data.get('leave_message', True)
+
+# TO DO: save data to database
+class newWorkoutLinked(SessionWizardView):
+    template_name = "workout_app/contact_form.html"
+
+    def done(self, form_list, **kwargs):
+        return render(self.request, 'workout_app/done.html', {
+            'form_data': [form.cleaned_data for form in form_list]
+        })
+
 
 def newWorkoutTypeCount(request):
     if request.user.is_anonymous:
