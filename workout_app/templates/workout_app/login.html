@@ -15,10 +15,18 @@
                     <a href="/logout"><button class="btn btn-dark">Logout</button></a>
                 </div>
                 {% else %}
-                <div class="text-center">
-                    <h1 style="padding:15px">Login to Your Account </h1>
-                    <p>You are not currently logged in.</p>
-                    <a href="{% provider_login_url 'google' %}"><button class="btn btn-dark">Login With Google</button></a>
+                <div style="height:50px;"></div>
+                 <div class="card mx-auto mb-3" style="max-width: 30rem">
+                    <div class="card-header" style="background-color:#eef4fe">
+                        <div class="text-center">
+                            <h2 style="style=padding:15px; font-weight:bold; font-weight:bold; font-size:25px">Login To Your Account</h2>
+                            <h6 style="font-size:15px">You are not currently logged in.</h6>
+                        </div>
+                    </div>
+
+                  <div class="card-body" style="text-align:center">
+                    <a href="{% provider_login_url 'google' %}"><button class="btn btn-dark">Login or Create Account With Google</button></a>
+                  </div>
                 </div>
                 {% endif %}
             </div>
