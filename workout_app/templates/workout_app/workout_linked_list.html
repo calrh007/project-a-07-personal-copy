@@ -50,7 +50,7 @@
                     <button class = "btn btn-secondary mr-2 mb-2" name="EditButton" value="{{ workout_linked.id }}">Edit</button>
                 </form>
 
-                <form action="" method="get">
+                <form action="" method="get" onsubmit="return confirm('Are you sure you want to delete this workout?')">
                     <button class = "btn btn-dark mr-2 mb-2" name="DeleteButton" value="{{ workout_linked.id }}">Delete</button>
                 </form>
                  </div>
