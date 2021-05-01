@@ -7,13 +7,23 @@
         <body>
             <div>
                 {% if user.is_authenticated %}
-                <div class="text-center">
-                    <h1 style="padding:15px">Account Info</h1>
+
+
+                 <div style="height:50px;"></div>
+                 <div class="card mx-auto mb-3" style="max-width: 30rem">
+                    <div class="card-header" style="background-color:#eef4fe">
+                        <div class="text-center">
+                            <h2 style="style=padding:15px; font-weight:bold; font-weight:bold; font-size:25px">Account Info</h2>
+                        </div>
+                    </div>
+
+                  <div class="card-body" style="text-align:center">
                     <p>Logged in as: {{ user.email }}</p>
                     <p>Default ZIP Code: {{ user.profile.zipcode }}</p>
                     <p>{{ user.profile.achievement_points }} point{{ user.profile.achievement_points|pluralize }} • {{ user.profile.achievement_num }} achievement{{ user.profile.achievement_num|pluralize }}</p>
                     <a href="/logout"><button class="btn btn-dark">Logout</button></a>
-                </div>
+                  </div>
+                  </div>
                 {% else %}
                 <div style="height:50px;"></div>
                  <div class="card mx-auto mb-3" style="max-width: 30rem">
