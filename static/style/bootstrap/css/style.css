@@ -113,7 +113,7 @@ p{
 
 
 /* .header--bg{
-    background: url("../assets/images/header-background.png") left center no-repeat;
+
     background-size: 100% 100%;
   } */
 
@@ -172,7 +172,7 @@ p{
     }
 
 /* .header__content .title-style{
-        background: url("../assets/images/title-shape.png") left center no-repeat;
+        
         padding: 0px 135px;
         vertical-align: middle;
         margin-left: 20px;
@@ -232,7 +232,7 @@ p{
     }
 
 /* .navbar-brand{
-  background: url("../assets/images/logo.png") left center no-repeat;
+  
   padding:0px 90px;
 } */
 
@@ -385,7 +385,7 @@ p{
   }
 
 /* .video__left{
-    background: url("../assets/images/video-player-bg.png") left center no-repeat;
+    
     height: 450px;
     background-size: cover;
   } */
@@ -581,19 +581,19 @@ p{
     }
 
 /* .testimonial .button-testimonial-1{
-      background: url("../assets/images/testimonial1.png") left center no-repeat;
+      
     }
 
 .testimonial .button-testimonial-2{
-      background: url("../assets/images/testimonial2.png") left center no-repeat;
+      
     }
 
 .testimonial .button-testimonial-3{
-      background: url("../assets/images/testimonial3.png") left center no-repeat;
+      
     }
 
 .testimonial .button-testimonial-4{
-      background: url("../assets/images/testimonial4.png") left center no-repeat;
+      
     } */
 
 .testimonial .collapsed{
@@ -626,22 +626,22 @@ p{
       }
 
 /* .testimonial .collapse__wrapper .bio-1{
-        background: url("../assets/images/testimonial1.png") left center no-repeat;
+        
         padding: 5px 100px;
       }
 
 .testimonial .collapse__wrapper .bio-2{
-        background: url("../assets/images/testimonial2.png") left center no-repeat;
+        
         padding: 5px 100px;
       }
 
 .testimonial .collapse__wrapper .bio-3{
-        background: url("../assets/images/testimonial3.png") left center no-repeat;
+        
         padding: 5px 100px;
       }
 
 .testimonial .collapse__wrapper .bio-4{
-        background: url("../assets/images/testimonial4.png") left center no-repeat;
+        
         padding: 5px 100px;
       } */
 
@@ -808,7 +808,7 @@ p{
           }
 
 /* .form--bg{
-    background: url("../assets/images/form-background.png") left center no-repeat;
+    
     background-size: cover;
   } */
 
