@@ -5,7 +5,7 @@ from django.views import generic
 # from .models import Workout
 # from .forms import WorkoutForm
 
-from .forms import WorkoutTypeForm, WorkoutLinkedForm, WorkoutTypeCountForm, CityForm
+from .forms import WorkoutTypeForm, WorkoutLinkedForm, WorkoutTypeCountForm, CityForm, UsernameChangeForm
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from .models import WorkoutLinked
@@ -366,7 +366,7 @@ def workoutSummary(request):
             if wt.has_weight_comp:
                 for iw in woct:
                     weight_tot += iw.weight
-                context['wts'][wt].append(('Average Weight per Workout', str(round((weight_tot / len(woct)).lb, 2)) + " lbs"))
+                context['wts'][wt].append(('Average Weight per Workout', str(round((weight_tot / len(woct)).lb, 2)) + " lb"))
             if wt.has_set_rep_comp:
                 st = 0
                 rt = 0
@@ -382,7 +382,7 @@ def workoutSummary(request):
                     for iw in woct:
                         weight_tot_w += (iw.raw_set * iw.raw_rep) * iw.weight
                     try:
-                        context['wts'][wt].append(('Average Weight per Rep', str(round((weight_tot_w / rt).lb, 2)) + " lbs"))
+                        context['wts'][wt].append(('Average Weight per Rep', str(round((weight_tot_w / rt).lb, 2)) + " lb"))
                     except:
                         print("divide by zero for Average Weight per Rep")
     for ct in WorkoutTypeCount.objects.all():
@@ -401,6 +401,20 @@ def workoutSummary(request):
     #     for a in context['wts'][v]:
     #         print(a)
     return render(request, 'workout_app/workout_summary.html', context)
+
+def changeUsername(request):
+    if request.user.is_anonymous:
+        messages.error(request, LE)
+        return HttpResponseRedirect('/login/')
+    if request.method == 'POST':
+        form = UsernameChangeForm(request.POST)
+        if form.is_valid():
+            request.user.username = form.cleaned_data['username']
+            request.user.save()
+            return HttpResponseRedirect('/login/')
+    else:
+        form = UsernameChangeForm(initial={'username': request.user.username})
+    return render(request, 'workout_app/username_change.html', {'form': form})
 
 def newWorkoutType(request):
     if request.user.is_anonymous:

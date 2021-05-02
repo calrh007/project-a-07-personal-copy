@@ -21,6 +21,7 @@ urlpatterns = [
     path('workout_summary/', views.workoutSummary, name='workout_summary'),
     path('achievements/', views.achievementsView, name='achievements'),
     path('leaderboards/', views.Leaderboard, name='leaderboards'),
+    path('change_username/', views.changeUsername, name='change_username'),
     # path('weather/', views.weather, name='weather'),
  ] 
  # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
