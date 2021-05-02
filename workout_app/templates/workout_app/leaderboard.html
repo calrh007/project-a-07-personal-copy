@@ -1,35 +1,59 @@
 {% extends "workout_app/base.html" %}
 
+{% load static %}
+
+
 {% block content %}
-<div class="col text-center">
-    <h1 style="padding:15px">Leaderboards</h1>
-    {% if leader_board %}
+
+
+<div style="height:50px;"></div>
+
+<div class="card mx-auto mb-3" style="max-width: 80rem">
+    <div class="card-header" style="background-color:#eef4fe">
+    <div class="text-center">
+        <h2 style="style=padding:15px; font-weight:bold; font-weight:bold; font-size:35px">Leaderboards</h2>
+    </div>
+    </div>
+
+    <div class="card-body" style="text-align:center">
+        {% if leader_board %}
         {% for wt, lbl in leader_board %}
-            <h2 style="padding:15px; font-weight:bold">{{wt}}</h2>
-            {% for cat_title, lb_list in lbl %}
-                <h4 style="padding:5px">{{cat_title}}</h4>
-                <table class="table mx-auto" style="max-width: 60rem;">
-                    <thead>
-                      <tr>
-                        <th scope="col" style="width: 10%">#</th>
-                        <th scope="col" style="width: 45%">Username</th>
-                        <th scope="col" style="width: 45%">{{cat_title}}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        {% for num, cat_count, user in lb_list %}
+            <div class="card mx-auto mb-4" style="max-width: 65rem">
+                <h2 style="padding:15px; font-weight:bold">{{wt}}</h2>
+                {% for cat_title, lb_list in lbl %}
+                    <h4 style="padding:5px">{{cat_title}}</h4>
+                    <table class="table mx-auto" style="max-width: 60rem;">
+                        <thead>
                         <tr>
-                            <th scope="row">{{num}}</th>
-                            <td>{{user.username}}</td>
-                            <td>{{cat_count}}</td>
+                            <th scope="col" style="width: 10%">#</th>
+                            <th scope="col" style="width: 45%">Username</th>
+                            <th scope="col" style="width: 45%">{{cat_title}}</th>
                         </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% endfor %}
+                        </thead>
+                        <tbody>
+                            {% for num, cat_count, user in lb_list %}
+                            <tr>
+                                {% if num == 1 %}
+                                    <th scope="row"> <div style="width:30px;"></div> {{num}} <img src="{% get_static_prefix %}icons/award-badge-star-1.png" width="50" /> </th>
+                                {% else %}
+                                    <th scope="row">{{num}}</th>
+                                {% endif %}
+
+                                <td>{{user.username}}</td>
+                                <td>{{cat_count}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                <div style="height:60px;"></div>
+
+                {% endfor %}
+            </div>
         {% endfor %}
     {% else %}
         <p>No such leaderboards are available.</p>
     {% endif %}
+    </div>
+</div>
 
 {% endblock %}
