@@ -41,6 +41,12 @@ def ensure_profile(user_te):
         new_profile = Profile(user = user_te)
         new_profile.save()
 
+def login_view(request):
+    if not request.user.is_anonymous:
+        ensure_profile(request.user)
+    context = {}
+    return render(request, 'workout_app/login.html', context)
+
 # class AddWorkoutView(CreateView):
 #     model = Workout
 #     from_class = WorkoutForm
