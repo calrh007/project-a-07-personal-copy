@@ -344,7 +344,7 @@ def workoutSummary(request):
             if wt.has_distance_comp:
                 for iw in woct:
                     dist_tot += iw.dist
-                context['wts'][wt].append(('Total Distance', dist_tot))
+                context['wts'][wt].append(('Total Distance', str(round((dist_tot).mi, 2)) + " mi"))
             if dur_tot != 0 and dist_tot != 0:
                 m26d = m26.Distance(dist_tot.mi)
                 m26t = m26.ElapsedTime(int(dur_tot.total_seconds()))
@@ -366,7 +366,7 @@ def workoutSummary(request):
             if wt.has_weight_comp:
                 for iw in woct:
                     weight_tot += iw.weight
-                context['wts'][wt].append(('Average Weight per Workout', weight_tot / len(woct)))
+                context['wts'][wt].append(('Average Weight per Workout', str(round((weight_tot / len(woct)).lb, 2)) + " lbs"))
             if wt.has_set_rep_comp:
                 st = 0
                 rt = 0
@@ -382,7 +382,7 @@ def workoutSummary(request):
                     for iw in woct:
                         weight_tot_w += (iw.raw_set * iw.raw_rep) * iw.weight
                     try:
-                        context['wts'][wt].append(('Average Weight per Rep', weight_tot_w / rt))
+                        context['wts'][wt].append(('Average Weight per Rep', str(round((weight_tot_w / rt).lb, 2)) + " lbs"))
                     except:
                         print("divide by zero for Average Weight per Rep")
     for ct in WorkoutTypeCount.objects.all():
