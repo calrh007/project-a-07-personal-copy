@@ -1,16 +1,16 @@
 @font-face {
   font-family: 'Geometria';
-  src: url("../static/style/fonts/Geometria.ttf");
+  src: url("../../fonts/Geometria.ttf");
 }
 
 @font-face {
   font-family: 'Geometria-Bold';
-  src: url("../static/style/fonts/Geometria-Bold.ttf");
+  src: url("../../fonts/Geometria-Bold.ttf");
 }
 
 @font-face {
   font-family: 'Geometria-Medium';
-  src: url("../static/style/fonts/geometria-medium.ttf");
+  src: url("../../fonts/geometria-medium.ttf");
 }
 
 @media (min-width: 1400px) {
@@ -45,7 +45,7 @@ input[type="submit"]:focus{
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url(../static/style/iconfont/MaterialIcons-Regular.ttf);
+  src: url(../../iconfont/MaterialIcons-Regular.ttf);
 }
 
 .material-icons {
