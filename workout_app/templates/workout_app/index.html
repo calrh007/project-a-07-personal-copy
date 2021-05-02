@@ -2,6 +2,176 @@
 
 {% block content %}
 
-    <h1 style="text-align:center; padding:15px">This is the site index</h1>
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="{% static 'style/fonts/flat-icon/flaticon.css' %}">
+  <link rel="stylesheet" href="{% static 'style/bootstrap/css/style.css' %}">
+</head>
+<body>
+  <div id="content-wrapper">
+    <header class="header header--bg">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <img class="img-responsive" src="{% static 'style/running-man.png' %}" alt="">
+          </div>
+          <div class="col-lg-6 header__content">
+            <h1 class="title">Adapt or Perish.<span class="title-style"></span></h1>
+            <p>Through A-07's advanced exercise computational intelligence, level up your fitness. Easily record your workouts from anywhere at any time. Compete on our world-class global leaderboards. Earn profound achievements. Most importantly, join the race of a lifetime.</p>
+          </div>
+        </div>
+        </div>
+    </header>
+
+    <section class="steps">
+      <div class="container">
+        <div class="page-section text-center">
+          <h2 class="page-section__title">Three simple steps</h2>
+          <div class="page-section__title-style">
+            <span class="first-line"></span>
+            <span class="second-line"></span>
+          </div>
+          <p class="page-section__subtitle">It is trivial to get started!</p>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="text-center steps__single steps__single-first">
+                <img src="{% static 'style/step1.png' %}" alt="">
+                <p>Create an account</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="text-center steps__single">
+                <img src="{% static 'style/step2.png' %}" alt="">
+                <p>Add workouts</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="text-center steps__single steps__single-last">
+                <img src="{% static 'style/step3.png' %}" alt="">
+                <p>Track your personal progress and compete against others</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="team team--bg">
+      <div class="container">
+        <div class="page-section">
+          <div class="text-center">
+            <h2 class="page-section__title">Our Team</h2>
+            <div class="team__title-style">
+              <span class="first-line"></span>
+              <span class="second-line"></span>
+            </div>
+            <p class="page-section__subtitle">Assembled from around the nation, brought together by the lively atmosphere of Charlottesville, VA, these five student developers have a relentless passion for software developement and fitness.</p>
+          </div>
+          <div class="row gutters-80" style="grid-row-gap: 30px">
+            <div class="col-md-4">
+              <div class="thumbnail team__single">
+                <div class="bio text-center">
+                  <h2>Cal Hartzell</h2>
+                  <p>DevOps Manager</p>
+                </div>
+                <div class="caption">
+                  <p>Engineering student at University of Virginia majoring in Computer Science.</p>
+                  <div class="social-icons">
+                    <li><a href="https://www.facebook.com/calrh007"><i class="flaticon-facebook-letter-logo"></i></a></li>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="thumbnail team__single">
+                <div class="bio text-center">
+                  <h2>Jennifer Tcheou</h2>
+                  <p>Scrum Master</p>
+                </div>
+                <div class="caption">
+                  <p>Third-year student at the University of Virginia majoring in Computer Science and minoring in Psychology and Technology Entrepreneurship, looking for opportunities to bridge my passions for creativity, technology, and problem-solving. </p>
+                  <div class="social-icons">
+                    <li><a href="https://www.facebook.com/jennifer.tcheou"><i class="flaticon-facebook-letter-logo"></i></a></li>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="thumbnail team__single">
+                <div class="bio text-center">
+                  <h2>Ashley Crawford</h2>
+                  <p>UX Designer</p>
+                </div>
+                <div class="caption">
+                  <p>Third-year at the University of Virginia majoring in Computer Science and minoring in Mathematics. Passionate about software development. </p>
+                  <div class="social-icons">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+                <div class="thumbnail team__single">
+                  <div class="bio text-center">
+                    <h2>Drew Goldman</h2>
+                    <p>Requirements Manager</p>
+                  </div>
+                  <div class="caption">
+                    <p>Second-year at the University of Virginia double majoring in Computer Science and Economics in SEAS. Fascinated by the intersection of technology and finance. Aspiring quant. </p>
+                    <div class="social-icons">
+                      <li><a href="https://www.facebook.com/drew.goldman.12/"><i class="flaticon-facebook-letter-logo"></i></a></li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="thumbnail team__single">
+                  <div class="bio text-center">
+                    <h2>Kieran Humphreys</h2>
+                    <p>Testing Manager</p>
+                  </div>
+                  <div class="caption">
+                    <p>Driven Computer Science student at the University of Virginia.</p>
+                    <div class="social-icons">
+                      <li><a href="https://www.facebook.com/kieran.humphreys.7"><i class="flaticon-facebook-letter-logo"></i></a></li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+
+
+
+
+  <script src="assets/jquery/jquery-3.2.1.min.js"></script>
+  <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+  <!-- <script src="assets/owl-slider/owl.carousel.min.js"></script> -->
+
+  <script>
+    $(document).ready(function() {
+      
+      $('button').click( function(e) {
+        $('.collapse').collapse('hide');
+      });
+
+
+      
+    });
+  </script>
+</body>
+</html>  
+
+
 
 {% endblock %}
