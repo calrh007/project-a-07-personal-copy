@@ -22,6 +22,7 @@ urlpatterns = [
     path('achievements/', views.achievementsView, name='achievements'),
     path('leaderboards/', views.Leaderboard, name='leaderboards'),
     path('change_username/', views.changeUsername, name='change_username'),
+    path('change_zipcode/', views.changeZipcode, name='change_zipcode'),
     # path('weather/', views.weather, name='weather'),
  ] 
  # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

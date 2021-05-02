@@ -12,6 +12,10 @@ from datetime import timedelta
 from pathlib import Path
 import os
 
+import pgeocode, math
+
+from django.core.exceptions import ValidationError
+
 # Create your models here.
 
 # class Workout(models.Model):
@@ -27,11 +31,16 @@ import os
 #     def get_absolute_url(self):
 #         return reverse('workout_list')
 
+def validate_zip(input_zip):
+    nomi = pgeocode.Nominatim('us')
+    if math.isnan(nomi.query_postal_code(input_zip).latitude):
+        raise ValidationError(input_zip + ' is not a valid US zipcode')
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     achievement_points = models.PositiveIntegerField(default = 0)
     achievement_num = models.PositiveIntegerField(default = 0)
-    zipcode = models.CharField(max_length=5, default='22904')
+    zipcode = models.CharField(max_length=5, default='22904', validators=[validate_zip])
     def __str__(self):
         return str(self.user)
 

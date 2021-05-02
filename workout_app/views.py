@@ -5,7 +5,7 @@ from django.views import generic
 # from .models import Workout
 # from .forms import WorkoutForm
 
-from .forms import WorkoutTypeForm, WorkoutLinkedForm, WorkoutTypeCountForm, CityForm, UsernameChangeForm
+from .forms import WorkoutTypeForm, WorkoutLinkedForm, WorkoutTypeCountForm, CityForm, UsernameChangeForm, ZipChangeForm
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from .models import WorkoutLinked
@@ -421,6 +421,20 @@ def changeUsername(request):
     else:
         form = UsernameChangeForm(initial={'username': request.user.username})
     return render(request, 'workout_app/username_change.html', {'form': form})
+
+def changeZipcode(request):
+    if request.user.is_anonymous:
+        messages.error(request, LE)
+        return HttpResponseRedirect('/login/')
+    if request.method == 'POST':
+        form = ZipChangeForm(request.POST)
+        if form.is_valid():
+            request.user.profile.zipcode = form.cleaned_data['zipcode']
+            request.user.profile.save()
+            return HttpResponseRedirect('/login/')
+    else:
+        form = ZipChangeForm(initial={'zipcode' : request.user.profile.zipcode})
+    return render(request, 'workout_app/zipcode_change.html', {'form': form})
 
 def newWorkoutType(request):
     if request.user.is_anonymous:
