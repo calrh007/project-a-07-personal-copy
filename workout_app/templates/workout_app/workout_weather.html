@@ -31,15 +31,14 @@
 {% endcomment %}
 
 
-<div class="card mx-auto mb-3" style="max-width: 30rem;">
-    <div class="card-header">
-        <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px"> {{ weather_info.city }} </span>
-            <span style="float:right; font-weight:lighter; font-size:15px"><em>{{ current_workout.start_date }}</em></span>
-        </h2>
+<div class="card mx-auto mb-3" style="max-width:25rem;">
+    <div class="card-header" style="background-color:#eef4fe">
+        <h2 class="text-center" style="color: black; font-weight:bold; font-weight:bold; font-size:25px"> {{ weather_info.city }}</h2>
+        <p  class="text-center" style="font-size:15px">{{ current_workout.start_date }}</p>
     </div>
-    <div class="card-body" style="text-align:left">
-        <p style="color: black"><b>Conditions: </b> <span style="font-weight:lighter; font-size:20px">{{ weather_info.description }}</span></p>
-        <p style="color: black"><b>Temperature: </b> <span style="font-weight:lighter; font-size:20px">{{ weather_info.temperature }}° F</span></p>
+    <div class="card-body text-center">
+        <p style="color: black; font-weight:bold; font-size:30px">{{ weather_info.temperature }}° F</span></p>
+        <p style="color: black; font-size:20px">{{ weather_info.description }}</span></p>
     </div>
     <p style="text-align:center;"><img src="http://openweathermap.org/img/w/{{ weather_info.icon }}.png" alt="Image"></p>
 </div>
@@ -47,5 +46,6 @@
 <div class="col text-center">
     <button onclick="location.href='{% url 'workout_linked_list' %}'" class = "btn btn-outline-secondary" name="BackButton">Back</button>
 </div>
+
 
 {% endblock %}

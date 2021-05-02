@@ -2,14 +2,13 @@
 
 {% block content %}
 <div class="col text-center">
-    <h1 style="padding:15px">Workout Summary Demo</h1>
+    <h1 style="padding:15px">Your Workout Summaries</h1>
     <h2 style="padding:15px">Workout Type Summaries</h2>
     {% if wts %}
         {% for wt, wta in wts.items %}
         <div class="card mx-auto mb-3" style="max-width: 30rem;">
-            <div class="card-header">
-                <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">{{ wt }} </span>
-                </h2>
+            <div class="card-header" style="background-color:#eef4fe">
+                <h2 class="text-center" style="color: black; font-weight:bold;font-size:25px">{{ wt }}</h2>
             </div>
             <div class="card-body" style="text-align:left">
                 {% for a in wta %}
@@ -25,7 +24,7 @@
     {% if cts %}
         {% for wtc, c in cts.items %}
         <div class="card mx-auto mb-3" style="max-width: 30rem;">
-            <div class="card-header">
+            <div class="card-header" style="background-color:#eef4fe">
                 <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">{{ wtc }} </span>
                 <span style="float:right">
                     {{ c }}

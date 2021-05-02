@@ -6,42 +6,47 @@
     <h1 style="padding:15px">Achievements</h1>
 {% if achievements_calc %}
 
-        <div class="card mx-auto mb-3" style="max-width: 45rem;">
+        <div class="card mx-auto mb-3" style="max-width: 45rem; background-color:#eef4fe">
             <div class="card-header">
-                <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">Total Possible Points</span>
+                <h2 style="font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">Total Possible Points</span>
                 <span style="float:right">
                     {{ total_possible_points }}
                 </span></h2>
             </div>
         </div>
-        <div class="card mx-auto mb-3" style="max-width: 45rem;">
+        <div class="card mx-auto mb-3" style="max-width: 45rem; background-color:#eef4fe">
             <div class="card-header">
-                <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">Total Points Earned</span>
+                <h2 style="font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">Total Points Earned</span>
                 <span style="float:right">
                     {{ total_earned_points }}
                 </span></h2>
             </div>
         </div>
-        <div class="card mx-auto mb-3" style="max-width: 45rem;">
+        <div class="card mx-auto mb-3" style="max-width: 45rem; background-color:#eef4fe">
             <div class="card-header">
-                <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">Total Points Unearned</span>
+                <h2 style="font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">Total Points Unearned</span>
                 <span style="float:right">
                     {{ total_missed_points }}
                 </span></h2>
             </div>
         </div>
 
-    {% for ach, earned in achievements_calc %}
-        {% if earned %}
-            <a tabindex="0" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="{{ach.title}} ({{ach.points}} point{{ ach.points|pluralize }})" data-content="{{ach.description}}">
-                <img src="{% get_static_prefix %}icons/{{ach.icon}}" width="50" style="filter: blur(0px);" />
-            </a>
-        {% else %}
-            <a tabindex="0" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="{{ach.title}} ({{ach.points}} point{{ ach.points|pluralize }})" data-content="{{ach.description}}">
-                <img src="{% get_static_prefix %}icons/{{ach.icon}}" width="50" style="filter: blur(3px);" />
-            </a>
-        {% endif %}
-    {% endfor %}
+        <h3 class="mb-4 mt-5">Your Personal Badges</h3>
+        <div class="card mx-auto mb-3" style="max-width: 45rem;">
+            <div class="row p-4">
+                {% for ach, earned in achievements_calc %}
+                    {% if earned %}
+                        <a tabindex="0" class="btn btn-default mb-3" role="button" data-toggle="popover" data-trigger="focus" title="{{ach.title}} ({{ach.points}} point{{ ach.points|pluralize }})" data-content="{{ach.description}}">
+                            <img src="{% get_static_prefix %}icons/{{ach.icon}}" width="50" style="filter: blur(0px);" />
+                        </a>
+                    {% else %}
+                        <a tabindex="0" class="btn btn-default" role="button" data-toggle="popover" data-trigger="focus" title="{{ach.title}} ({{ach.points}} point{{ ach.points|pluralize }})" data-content="{{ach.description}}">
+                            <img src="{% get_static_prefix %}icons/{{ach.icon}}" width="50" style="filter: blur(3px);" />
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
 
 {% else %}
     <p>No achievements are available.</p>
