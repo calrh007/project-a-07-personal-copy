@@ -339,10 +339,31 @@ def workoutSummary(request):
     if request.user.is_anonymous:
         messages.error(request, LE)
         return HttpResponseRedirect('/login/')
+
+    user_workouts = WorkoutLinked.objects.filter(profile=request.user)
+    try:
+        days_back = int(request.GET.get('days_back', '0'))
+        if days_back < 0:
+            days_back = 0
+    except:
+        days_back = 0
+    if days_back > 0:
+        date_back = datetime.date.today() - datetime.timedelta(days=days_back)
+        temp_filter = user_workouts.filter(start_date__gte = date_back, one_day = True)
+        user_workouts = temp_filter | user_workouts.filter(end_date__gte = date_back, one_day = False)
     context = {}
+    if days_back == 0:
+        context['time_per'] = 'All Time'
+    elif days_back == 365:
+        context['time_per'] = 'Past Year'
+    elif days_back == 30:
+        context['time_per'] = 'Past Month'
+    elif days_back == 7:
+        context['time_per'] = 'Past Week'
+    else:
+        context['time_per'] = 'Past ' + str(days_back) + ' Days'
     context['wts'] = {}
     context['cts'] = {}
-    user_workouts = WorkoutLinked.objects.filter(profile=request.user)
     for wt in WorkoutType.objects.all():
         woct = user_workouts.filter(workoutType=wt)
         if woct:
