@@ -40,21 +40,41 @@
                     <p style="color: black"><b>Weight: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.weight }}</span></p>
                 {% endif %}
 
+                <div class="row">
+                    <div class="col">
+                        <form action="" method="get">
+                            <button class = "btn btn-outline-secondary" name="WeatherButton" value="{{ workout_linked.id }}">Weather</button>
+                        </form>
+                    </div>
 
-                <form action="" method="get">
-                    <button class = "btn btn-outline-secondary" name="WeatherButton" value="{{ workout_linked.id }}">Weather</button>
-                </form>
+                    <!-- <div class="text-right">
+                        <form action="" method="get">
+                            <button class = "btn btn-secondary mr-2 mb-2" name="EditButton" value="{{ workout_linked.id }}">Edit</button>
+                        </form>
 
-                <div class="text-right">
-                <form action="" method="get">
-                    <button class = "btn btn-secondary mr-2 mb-2" name="EditButton" value="{{ workout_linked.id }}">Edit</button>
-                </form>
+                        <form action="" method="get" onsubmit="return confirm('Are you sure you want to delete this workout?')">
+                            <button class = "btn btn-dark mr-2 mb-2" name="DeleteButton" value="{{ workout_linked.id }}">Delete</button>
+                        </form>
+                    </div> -->
 
-                <form action="" method="get" onsubmit="return confirm('Are you sure you want to delete this workout?')">
-                    <button class = "btn btn-dark mr-2 mb-2" name="DeleteButton" value="{{ workout_linked.id }}">Delete</button>
-                </form>
-                 </div>
+                    <div class="col">
+                        <div class="dropdown text-right">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Manage
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                <form action="" method="get">
+                                    <button class = "dropdown-item" name="EditButton" value="{{ workout_linked.id }}">Edit</button>
+                                </form>
 
+                                <form action="" method="get" onsubmit="return confirm('Are you sure you want to delete this workout?')">
+                                    <button class = "dropdown-item" name="DeleteButton" value="{{ workout_linked.id }}">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    
             </div>
         </div>
     {% endfor %}
