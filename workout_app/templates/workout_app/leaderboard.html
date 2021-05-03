@@ -74,7 +74,7 @@
                             {% endif %}
 
                             <td>{{user.username}}</td>
-                            <td>{{cat_count}}</td>
+                            <td>{% round_if_measurement cat_count %}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
