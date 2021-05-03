@@ -39,6 +39,23 @@
         {% endif %}
     </span>
     </div>
+
+    <div>Max Leaderboard Size: <span style="color: #387FF0">
+        {% for poss_spot in num_spots_poss|slice:":-1" %}
+            {% if poss_spot == num_spots %}
+                <u><a href="?{% url_replace request 'num_spots' poss_spot %}">{{poss_spot}}</a></u> / 
+            {% else %}
+                <a href="?{% url_replace request 'num_spots' poss_spot %}">{{poss_spot}}</a> / 
+            {% endif %}
+        {% endfor %}
+        {% for poss_spot in num_spots_poss|slice:"-1:" %}
+            {% if poss_spot == num_spots %}
+                <u><a href="?{% url_replace request 'num_spots' poss_spot %}">{{poss_spot}}</a></u>
+            {% else %}
+                <a href="?{% url_replace request 'num_spots' poss_spot %}">{{poss_spot}}</a>
+            {% endif %}
+        {% endfor %}
+        </span>
 </div>
 
 <div style="height:15px;"></div>

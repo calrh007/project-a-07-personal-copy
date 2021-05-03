@@ -267,7 +267,7 @@ def workoutLinkedListView(request):
 
     return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
 
-def leaderboard_context(workout_types, workouts_to_consider, workout_type_counts):
+def leaderboard_context(workout_types, workouts_to_consider, workout_type_counts, num_spots):
     leader_board_context = []
     zero_dist = Distance()
     zero_dur = timedelta()
@@ -288,6 +288,7 @@ def leaderboard_context(workout_types, workouts_to_consider, workout_type_counts
         for l, t in [(dur_list, 'Total Duration'), (dist_list, 'Total Distance')]:
             if l:
                 l.sort(key=lambda x:x[0], reverse=True)
+                l = l[:num_spots]
                 list_proc = [(1, l[0][0], l[0][1])]
                 for i in range(1, len(l)):
                     if l[i][0] == l[i - 1][0]:
@@ -314,6 +315,7 @@ def leaderboard_context(workout_types, workouts_to_consider, workout_type_counts
                 ct_list.append((cc, user))
         if ct_list:
             ct_list.sort(key=lambda x:x[0], reverse=True)
+            ct_list = ct_list[:num_spots]
             ct_list_proc = [(1, ct_list[0][0], ct_list[0][1])]
             for i in range(1, len(ct_list)):
                 if ct_list[i][0] == ct_list[i - 1][0]:
@@ -333,16 +335,25 @@ def Leaderboard(request):
     all_workouts = WorkoutLinked.objects.all()
     context['days_back_poss'] = ((0, 'All Time'), (365, 'Past Year'), (30, 'Past Month'), (7, 'Past Week'))
     try:
-        days_back = int(request.GET.get('days_back', '7'))
+        days_back = int(request.GET.get('days_back', '30'))
         if days_back < 0:
-            days_back = 0
+            days_back = 30
     except:
-        days_back = 0
+        days_back = 30
     if days_back > 0:
         date_back = datetime.date.today() - datetime.timedelta(days=days_back)
         temp_filter = all_workouts.filter(start_date__gte = date_back, one_day = True)
         all_workouts = temp_filter | all_workouts.filter(end_date__gte = date_back, one_day = False)
     context['days_back'] = days_back
+
+    context['num_spots_poss'] = (5, 10, 20, 100)
+    try:
+        num_spots = int(request.GET.get('num_spots', '10'))
+        if num_spots <= 0:
+            num_spots = 10
+    except:
+        num_spots = 10
+    context['num_spots'] = num_spots
 
     only_participating_str = request.GET.get('only_participating', 'True')
     if only_participating_str == 'False':
@@ -370,7 +381,7 @@ def Leaderboard(request):
     else:
         workout_type_counts = WorkoutTypeCount.objects.all()
 
-    context['leader_board'] = leaderboard_context(workout_types, all_workouts, workout_type_counts)
+    context['leader_board'] = leaderboard_context(workout_types, all_workouts, workout_type_counts, num_spots)
     return render(request, 'workout_app/leaderboard.html', context)
 
 def workoutSummary(request):
