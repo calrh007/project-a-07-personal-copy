@@ -19,9 +19,12 @@
 
                   <div class="card-body" style="text-align:center">
                     <p>Logged in as: {{ user.email }}</p>
+                    <p>Leaderboard Username: {{ user.username }}</p>
                     <p>Default ZIP Code: {{ user.profile.zipcode }}</p>
                     <p>{{ user.profile.achievement_points }} point{{ user.profile.achievement_points|pluralize }} • {{ user.profile.achievement_num }} achievement{{ user.profile.achievement_num|pluralize }}</p>
-                    <a href="/logout"><button class="btn btn-dark">Logout</button></a>
+                    <div style="padding: 5px 5px 5px 5px"> <a href="/change_username"><button class="btn btn-secondary">Change Leaderboard Username</button></a> </div>
+                    <div style="padding: 5px 5px 5px 5px"> <a href="/change_zipcode"><button class="btn btn-secondary">Change Default Zipcode</button></a> </div>
+                    <div style="padding: 5px 5px 5px 5px"> <a href="/logout"><button class="btn btn-dark">Logout</button></a> </div>
                   </div>
                   </div>
                 {% else %}

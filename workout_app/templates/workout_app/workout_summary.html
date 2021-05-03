@@ -1,8 +1,10 @@
 {% extends "workout_app/base.html" %}
+{% load custom_tags %}
 
 {% block content %}
 <div class="col text-center">
-    <h1 style="padding:15px">Your Workout Summaries</h1>
+    <h1 style="padding:15px">Your Workout Summaries: {{ time_per }}</h1>
+    <div>Time Period: </div><div style="color: #387FF0"><a href="?{% url_replace request 'days_back' 0 %}" style="color: #387FF0">All time</a> / <a href="?{% url_replace request 'days_back' 365 %}" style="color:#387FF0">Past Year</a> / <a href="?{% url_replace request 'days_back' 30 %}" style="color:#387FF0">Past Month</a> / <a href="?{% url_replace request 'days_back' 7 %}" style="color:#387FF0">Past Week</a></div>
     <h2 style="padding:15px">Workout Type Summaries</h2>
     {% if wts %}
         {% for wt, wta in wts.items %}
@@ -18,7 +20,9 @@
         </div>
         {% endfor %}
     {% else %}
-        <p>No workout type summaries are available.</p>
+        <div class="col text-center">
+            <h4 style="padding:5px; text-align:center"><i>No such workout type summaries are available</i></h4>
+        </div>
     {% endif %}
     <h2 style="padding:15px">Count Type Summaries</h2>
     {% if cts %}
@@ -33,7 +37,9 @@
         </div>
         {% endfor %}
     {% else %}
-        <p>No workout count type summaries are available.</p>
+        <div class="col text-center">
+            <h4 style="padding:5px; text-align:center"><i>No such workout count type summaries are available</i></h4>
+        </div>
     {% endif %}
 
 </div>

@@ -2,6 +2,9 @@ from django import forms
 # from .models import Workout
 
 from .models import WorkoutType, WorkoutLinked, WorkoutTypeCount, City
+from django.contrib.auth.models import User
+
+from .models import Profile
 
 # class WorkoutForm(forms.ModelForm):
 #     class Meta:
@@ -23,6 +26,16 @@ class WorkoutTypeForm(forms.ModelForm):
     class Meta:
         model = WorkoutType
         exclude = ['profile', 'is_official_type']
+
+class UsernameChangeForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username']
+
+class ZipChangeForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['zipcode']
 
 
 class WorkoutLinkedForm(forms.ModelForm):

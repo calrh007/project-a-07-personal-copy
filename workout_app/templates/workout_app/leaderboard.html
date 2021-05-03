@@ -1,4 +1,5 @@
 {% extends "workout_app/base.html" %}
+{% load custom_tags %}
 
 {% load static %}
 
@@ -6,61 +7,103 @@
 {% block content %}
 
 
-<div style="height:50px;"></div>
+<div style="height:10px;"></div>
 
-<div class="card mx-auto mb-3" style="max-width: 80rem">
-    <div class="card-header" style="background-color:#eef4fe">
-    <div class="text-center">
-        <h2 style="style=padding:15px; font-weight:bold; font-weight:bold; font-size:35px">Leaderboards</h2>
+<div class="col text-center">
+    <h1 style="padding:15px">Leaderboards</h1>
+    <div>Time Period: <span style="color: #387FF0">
+    {% for days, mess in days_back_poss|slice:":-1" %}
+        {% if days == days_back %}
+            <u><a href="?{% url_replace request 'days_back' days %}">{{mess}}</a></u> / 
+        {% else %}
+            <a href="?{% url_replace request 'days_back' days %}">{{mess}}</a> / 
+        {% endif %}
+    {% endfor %}
+    {% for days, mess in days_back_poss|slice:"-1:" %}
+        {% if days == days_back %}
+            <u><a href="?{% url_replace request 'days_back' days %}">{{mess}}</a></u>
+        {% else %}
+            <a href="?{% url_replace request 'days_back' days %}">{{mess}}</a>
+        {% endif %}
+    {% endfor %}
+    </span>
     </div>
+
+    <div>Workouts: <span style="color: #387FF0">
+        {% if only_participating %}
+            <u><a href="?{% url_replace request 'only_participating' True %}">Only Participating Workouts</a></u> / 
+            <a href="?{% url_replace request 'only_participating' False %}">All Workouts</a>
+        {% else %}
+            <a href="?{% url_replace request 'only_participating' True %}">Only Participating Workouts</a> / 
+            <u><a href="?{% url_replace request 'only_participating' False %}">All Workouts</a></u>
+        {% endif %}
+    </span>
     </div>
 
-    <div class="card-body">
-        {% if leader_board %}
-        {% for wt, lbl in leader_board %}
-            <div class="card mx-auto mb-4" style="max-width: 65rem">
-                <h2 style="padding:15px; font-weight:bold; text-align:center">{{wt}}</h2>
-                {% for cat_title, lb_list in lbl %}
-                    <h4 style="padding:5px; text-align:center">{{cat_title}}</h4>
-                    <table class="table mx-auto" style="max-width: 60rem;">
-                        <thead>
-                        <tr>
-                            <th scope="col" style="width: 4%"></th>
-                            <th scope="col" style="width: 6%">#</th>
-                            <th scope="col" style="width: 45%">Username</th>
-                            <th scope="col" style="width: 45%">{{cat_title}}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            {% for num, cat_count, user in lb_list %}
-                            {% if user == request.user %}
-                            <tr style="font-weight: 900">
-                            {% else %}
-                            <tr>
-                            {% endif %}
-                                {% if num == 1 %}
-                                    <th scope="row"> <img src="{% get_static_prefix %}icons/award-badge-star-1.png" width="30" /> </th>
-                                    <td>{{num}}</td>
-                                {% else %}
-                                    <th scope="row">  </th>
-                                    <td>{{num}}</td>
-                                {% endif %}
-
-                                <td>{{user.username}}</td>
-                                <td>{{cat_count}}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                <div style="height:60px;"></div>
-
-                {% endfor %}
-            </div>
+    <div>Max Leaderboard Size: <span style="color: #387FF0">
+        {% for poss_spot in num_spots_poss|slice:":-1" %}
+            {% if poss_spot == num_spots %}
+                <u><a href="?{% url_replace request 'num_spots' poss_spot %}">{{poss_spot}}</a></u> / 
+            {% else %}
+                <a href="?{% url_replace request 'num_spots' poss_spot %}">{{poss_spot}}</a> / 
+            {% endif %}
         {% endfor %}
-    {% else %}
-        <p>No such leaderboards are available.</p>
-    {% endif %}
-    </div>
+        {% for poss_spot in num_spots_poss|slice:"-1:" %}
+            {% if poss_spot == num_spots %}
+                <u><a href="?{% url_replace request 'num_spots' poss_spot %}">{{poss_spot}}</a></u>
+            {% else %}
+                <a href="?{% url_replace request 'num_spots' poss_spot %}">{{poss_spot}}</a>
+            {% endif %}
+        {% endfor %}
+        </span>
 </div>
+
+<div style="height:15px;"></div>
+
+{% if leader_board %}
+    {% for wt, lbl in leader_board %}
+        <div class="card mx-auto mb-4" style="max-width: 65rem">
+            <h2 style="padding:15px; font-weight:bold; text-align:center">{{wt}}</h2>
+            {% for cat_title, lb_list in lbl %}
+                <h4 style="padding:5px; text-align:center">{{cat_title}}</h4>
+                <table class="table mx-auto" style="max-width: 60rem;">
+                    <thead>
+                    <tr>
+                        <th scope="col" style="width: 4%"></th>
+                        <th scope="col" style="width: 6%">#</th>
+                        <th scope="col" style="width: 45%">Username</th>
+                        <th scope="col" style="width: 45%">{{cat_title}}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for num, cat_count, user in lb_list %}
+                        {% if user == request.user %}
+                        <tr style="font-weight: 900">
+                        {% else %}
+                        <tr>
+                        {% endif %}
+                            {% if num == 1 %}
+                                <th scope="row"> <img src="{% get_static_prefix %}icons/award-badge-star-1.png" width="30" /> </th>
+                                <td>{{num}}</td>
+                            {% else %}
+                                <th scope="row">  </th>
+                                <td>{{num}}</td>
+                            {% endif %}
+
+                            <td>{{user.username}}</td>
+                            <td>{% round_if_measurement cat_count %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            <div style="height:60px;"></div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="col text-center">
+        <h4 style="padding:5px; text-align:center"><i>No such leaderboards are available</i></h4>
+    </div>
+{% endif %}
 
 {% endblock %}

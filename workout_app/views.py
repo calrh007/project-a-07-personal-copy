@@ -5,7 +5,7 @@ from django.views import generic
 # from .models import Workout
 # from .forms import WorkoutForm
 
-from .forms import WorkoutTypeForm, WorkoutLinkedForm, WorkoutTypeCountForm, CityForm
+from .forms import WorkoutTypeForm, WorkoutLinkedForm, WorkoutTypeCountForm, CityForm, UsernameChangeForm, ZipChangeForm
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from .models import WorkoutLinked
@@ -40,6 +40,12 @@ def ensure_profile(user_te):
     except:
         new_profile = Profile(user = user_te)
         new_profile.save()
+
+def login_view(request):
+    if not request.user.is_anonymous:
+        ensure_profile(request.user)
+    context = {}
+    return render(request, 'workout_app/login.html', context)
 
 # class AddWorkoutView(CreateView):
 #     model = Workout
@@ -235,12 +241,15 @@ def workoutLinkedListView(request):
         return render(request, 'workout_app/workout_weather.html', context)
 
     if (request.GET.get('DeleteButton')):
+        if current_workout.profile != request.user:
+            return HttpResponseRedirect('/')
         WorkoutLinked.objects.filter(id=request.GET.get('DeleteButton')).delete()
         return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
 
     if (request.GET.get('EditButton')):
         current_workout = WorkoutLinked.objects.get(id=request.GET.get('EditButton'))
-
+        if current_workout.profile != request.user:
+            return HttpResponseRedirect('/')
         if request.method == 'POST':
             form = WorkoutLinkedForm(request.POST, instance = current_workout)
             if form.is_valid():
@@ -250,20 +259,24 @@ def workoutLinkedListView(request):
                 return HttpResponseRedirect('/workout_linked_list/')
         else:
             form = WorkoutLinkedForm(initial = model_to_dict(current_workout))
+        if 'weight' in form.errors:
+            messages.error(request, form.errors['weight'][0])
+        if 'dist' in form.errors:
+            messages.error(request, form.errors['dist'][0])
         return render(request, 'workout_app/edit_workout_linked.html', {'form': form})
 
     return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
 
-def leaderboard_context():
+def leaderboard_context(workout_types, workouts_to_consider, workout_type_counts, num_spots):
     leader_board_context = []
     zero_dist = Distance()
     zero_dur = timedelta()
-    for wt in WorkoutType.objects.all():
+    for wt in workout_types:
         leader_board_context.append((wt, []))
         dur_list = []
         dist_list = []
         for user in User.objects.all():
-            wotc = WorkoutLinked.objects.filter(profile=user, workoutType=wt)
+            wotc = workouts_to_consider.filter(profile=user, workoutType=wt)
             if wt.has_duration:
                 dur_tot = wotc.aggregate(Sum('duration'))['duration__sum']
                 if dur_tot is not None and dur_tot > zero_dur:
@@ -275,6 +288,7 @@ def leaderboard_context():
         for l, t in [(dur_list, 'Total Duration'), (dist_list, 'Total Distance')]:
             if l:
                 l.sort(key=lambda x:x[0], reverse=True)
+                l = l[:num_spots]
                 list_proc = [(1, l[0][0], l[0][1])]
                 for i in range(1, len(l)):
                     if l[i][0] == l[i - 1][0]:
@@ -285,7 +299,7 @@ def leaderboard_context():
         if not leader_board_context[-1][0]:
             leader_board_context.pop()
     leader_board_context.append(('Workout Count Components', []))
-    for ct in WorkoutTypeCount.objects.all():
+    for ct in workout_type_counts:
         ct_list = []
         for user in User.objects.all():
             cc = 0
@@ -301,6 +315,7 @@ def leaderboard_context():
                 ct_list.append((cc, user))
         if ct_list:
             ct_list.sort(key=lambda x:x[0], reverse=True)
+            ct_list = ct_list[:num_spots]
             ct_list_proc = [(1, ct_list[0][0], ct_list[0][1])]
             for i in range(1, len(ct_list)):
                 if ct_list[i][0] == ct_list[i - 1][0]:
@@ -308,10 +323,7 @@ def leaderboard_context():
                 else:
                     ct_list_proc.append((ct_list_proc[-1][0] + 1, ct_list[i][0], ct_list[i][1]))
             leader_board_context[-1][1].append(('Total ' + str(ct), ct_list_proc))
-    if not leader_board_context[-1][0]:
-        leader_board_context.pop()
-    # print(leader_board_context)
-    # return []
+    leader_board_context = [lbi for lbi in leader_board_context if lbi[1]]
     return leader_board_context
 
 def Leaderboard(request):
@@ -319,17 +331,88 @@ def Leaderboard(request):
         messages.error(request, LE)
         return HttpResponseRedirect('/login/')
     context = {}
-    context['leader_board'] = leaderboard_context()
+
+    all_workouts = WorkoutLinked.objects.all()
+    context['days_back_poss'] = ((0, 'All Time'), (365, 'Past Year'), (30, 'Past Month'), (7, 'Past Week'))
+    try:
+        days_back = int(request.GET.get('days_back', '30'))
+        if days_back < 0:
+            days_back = 30
+    except:
+        days_back = 30
+    if days_back > 0:
+        date_back = datetime.date.today() - datetime.timedelta(days=days_back)
+        temp_filter = all_workouts.filter(start_date__gte = date_back, one_day = True)
+        all_workouts = temp_filter | all_workouts.filter(end_date__gte = date_back, one_day = False)
+    context['days_back'] = days_back
+
+    context['num_spots_poss'] = (5, 10, 20, 100)
+    try:
+        num_spots = int(request.GET.get('num_spots', '10'))
+        if num_spots <= 0:
+            num_spots = 10
+    except:
+        num_spots = 10
+    context['num_spots'] = num_spots
+
+    only_participating_str = request.GET.get('only_participating', 'True')
+    if only_participating_str == 'False':
+        only_participating = False
+    else:
+        only_participating = True
+    context['only_participating'] = only_participating
+
+    user_workouts = all_workouts.filter(profile=request.user)
+    if only_participating:
+        workout_types = []
+        for wt in WorkoutType.objects.all():
+            if user_workouts.filter(workoutType=wt).exists():
+                workout_types.append(wt)
+    else:
+        workout_types = WorkoutType.objects.all()
+
+    if only_participating:
+        workout_type_counts = set()
+        for wt in workout_types:
+            if wt.has_first_count_component:
+                workout_type_counts.add(wt.first_count_component)
+            if wt.has_second_count_component:
+                workout_type_counts.add(wt.second_count_component)
+    else:
+        workout_type_counts = WorkoutTypeCount.objects.all()
+
+    context['leader_board'] = leaderboard_context(workout_types, all_workouts, workout_type_counts, num_spots)
     return render(request, 'workout_app/leaderboard.html', context)
 
 def workoutSummary(request):
     if request.user.is_anonymous:
         messages.error(request, LE)
         return HttpResponseRedirect('/login/')
+
+    user_workouts = WorkoutLinked.objects.filter(profile=request.user)
+    try:
+        days_back = int(request.GET.get('days_back', '0'))
+        if days_back < 0:
+            days_back = 0
+    except:
+        days_back = 0
+    if days_back > 0:
+        date_back = datetime.date.today() - datetime.timedelta(days=days_back)
+        temp_filter = user_workouts.filter(start_date__gte = date_back, one_day = True)
+        user_workouts = temp_filter | user_workouts.filter(end_date__gte = date_back, one_day = False)
     context = {}
+    if days_back == 0:
+        context['time_per'] = 'All Time'
+    elif days_back == 365:
+        context['time_per'] = 'Past Year'
+    elif days_back == 30:
+        context['time_per'] = 'Past Month'
+    elif days_back == 7:
+        context['time_per'] = 'Past Week'
+    else:
+        context['time_per'] = 'Past ' + str(days_back) + ' Days'
     context['wts'] = {}
     context['cts'] = {}
-    user_workouts = WorkoutLinked.objects.filter(profile=request.user)
     for wt in WorkoutType.objects.all():
         woct = user_workouts.filter(workoutType=wt)
         if woct:
@@ -344,7 +427,7 @@ def workoutSummary(request):
             if wt.has_distance_comp:
                 for iw in woct:
                     dist_tot += iw.dist
-                context['wts'][wt].append(('Total Distance', dist_tot))
+                context['wts'][wt].append(('Total Distance', str(round((dist_tot).mi, 2)) + " mi"))
             if dur_tot != 0 and dist_tot != 0:
                 m26d = m26.Distance(dist_tot.mi)
                 m26t = m26.ElapsedTime(int(dur_tot.total_seconds()))
@@ -366,7 +449,7 @@ def workoutSummary(request):
             if wt.has_weight_comp:
                 for iw in woct:
                     weight_tot += iw.weight
-                context['wts'][wt].append(('Average Weight per Workout', weight_tot / len(woct)))
+                context['wts'][wt].append(('Average Weight per Workout', str(round((weight_tot / len(woct)).lb, 2)) + " lb"))
             if wt.has_set_rep_comp:
                 st = 0
                 rt = 0
@@ -382,7 +465,7 @@ def workoutSummary(request):
                     for iw in woct:
                         weight_tot_w += (iw.raw_set * iw.raw_rep) * iw.weight
                     try:
-                        context['wts'][wt].append(('Average Weight per Rep', weight_tot_w / rt))
+                        context['wts'][wt].append(('Average Weight per Rep', str(round((weight_tot_w / rt).lb, 2)) + " lb"))
                     except:
                         print("divide by zero for Average Weight per Rep")
     for ct in WorkoutTypeCount.objects.all():
@@ -401,6 +484,34 @@ def workoutSummary(request):
     #     for a in context['wts'][v]:
     #         print(a)
     return render(request, 'workout_app/workout_summary.html', context)
+
+def changeUsername(request):
+    if request.user.is_anonymous:
+        messages.error(request, LE)
+        return HttpResponseRedirect('/login/')
+    if request.method == 'POST':
+        form = UsernameChangeForm(request.POST)
+        if form.is_valid():
+            request.user.username = form.cleaned_data['username']
+            request.user.save()
+            return HttpResponseRedirect('/login/')
+    else:
+        form = UsernameChangeForm(initial={'username': request.user.username})
+    return render(request, 'workout_app/username_change.html', {'form': form})
+
+def changeZipcode(request):
+    if request.user.is_anonymous:
+        messages.error(request, LE)
+        return HttpResponseRedirect('/login/')
+    if request.method == 'POST':
+        form = ZipChangeForm(request.POST)
+        if form.is_valid():
+            request.user.profile.zipcode = form.cleaned_data['zipcode']
+            request.user.profile.save()
+            return HttpResponseRedirect('/login/')
+    else:
+        form = ZipChangeForm(initial={'zipcode' : request.user.profile.zipcode})
+    return render(request, 'workout_app/zipcode_change.html', {'form': form})
 
 def newWorkoutType(request):
     if request.user.is_anonymous:
@@ -429,7 +540,11 @@ def newWorkoutLinked(request):
             ots.save()
             return HttpResponseRedirect('/workout_linked_list')
     else:
-        form = WorkoutLinkedForm()
+        form = WorkoutLinkedForm(initial={'zipcode': request.user.profile.zipcode})
+    if 'weight' in form.errors:
+        messages.error(request, form.errors['weight'][0])
+    if 'dist' in form.errors:
+        messages.error(request, form.errors['dist'][0])
     return render(request, 'workout_app/add_workout_linked.html', {'form': form})
 
 def newWorkoutTypeCount(request):

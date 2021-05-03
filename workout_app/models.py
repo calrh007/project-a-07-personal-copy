@@ -12,6 +12,10 @@ from datetime import timedelta
 from pathlib import Path
 import os
 
+import pgeocode, math
+
+from django.core.exceptions import ValidationError
+
 # Create your models here.
 
 # class Workout(models.Model):
@@ -27,11 +31,16 @@ import os
 #     def get_absolute_url(self):
 #         return reverse('workout_list')
 
+def validate_zip(input_zip):
+    nomi = pgeocode.Nominatim('us')
+    if math.isnan(nomi.query_postal_code(input_zip).latitude):
+        raise ValidationError(input_zip + ' is not a valid US zipcode')
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     achievement_points = models.PositiveIntegerField(default = 0)
     achievement_num = models.PositiveIntegerField(default = 0)
-    zipcode = models.CharField(max_length=5, default='22904')
+    zipcode = models.CharField(max_length=5, default='22904', validators=[validate_zip])
     def __str__(self):
         return str(self.user)
 
@@ -64,14 +73,25 @@ INTENSITY_CHOICES = (
     ('NA', 'Not Applicable')
 )
 
+def validate_date_not_future(input_date):
+    if input_date > datetime.date.today():
+        raise ValidationError('Date cannot be in the future')
+
+def validate_positive_weight(input_weight):
+    if input_weight < Weight():
+        raise ValidationError('Weight cannot be negative')
+
+def validate_positive_dist(input_dist):
+    if input_dist < Distance():
+        raise ValidationError('Distance cannot be negative')
 
 class WorkoutLinked(models.Model):
     workoutType = models.ForeignKey(WorkoutType, on_delete=models.CASCADE)
     profile = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    zipcode = models.CharField(max_length=5, default='22904')
-    start_date = models.DateField(default=datetime.date.today)
+    zipcode = models.CharField(max_length=5, default='22904', validators=[validate_zip])
+    start_date = models.DateField(default=datetime.date.today, validators=[validate_date_not_future])
     one_day = models.BooleanField(default=True)
-    end_date = models.DateField(default=datetime.date.today)
+    end_date = models.DateField(default=datetime.date.today, validators=[validate_date_not_future])
     duration = models.DurationField(blank = True)
     intensity = models.CharField(
         max_length = 2,
@@ -81,17 +101,19 @@ class WorkoutLinked(models.Model):
     dist = MeasurementField(
         blank = True,
         measurement=Distance,
-        unit_choices=(("mi", "mi"), ("km", "km"), ("ft", "ft"), ("m", "m"))
+        unit_choices=(("mi", "mi"), ("km", "km"), ("ft", "ft"), ("m", "m")),
+        validators=[validate_positive_dist]
     )
 
     raw_count = models.PositiveIntegerField(default = 0)
     second_raw_count = models.PositiveIntegerField(default = 0)
-    raw_set = models.PositiveIntegerField(default = 1)
-    raw_rep = models.PositiveIntegerField(default = 1)
+    raw_set = models.PositiveIntegerField(default = 1, verbose_name='Sets')
+    raw_rep = models.PositiveIntegerField(default = 1, verbose_name='Reps')
     weight = MeasurementField(
         blank = True,
         measurement=Weight,
-        unit_choices=(("lb", "lb"), ("kg", "kg"))
+        unit_choices=(("lb", "lb"), ("kg", "kg")),
+        validators=[validate_positive_weight]
     )
 
     def get_year(self):

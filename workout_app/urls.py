@@ -10,7 +10,7 @@ from django.contrib.auth.views import LogoutView
 urlpatterns = [
     path('', views.index, name='index'),
     path('accounts/', include('allauth.urls')),
-    path('login/', TemplateView.as_view(template_name="workout_app/login.html"), name='login'),
+    path('login/', views.login_view, name='login'),
     path('logout/', LogoutView.as_view()),
     # path('add_workout/', AddWorkoutView.as_view(), name='add_workout'),
     # path('add_workout/workout_list', WorkoutListView.as_view(), name='workout_list'),
@@ -21,6 +21,8 @@ urlpatterns = [
     path('workout_summary/', views.workoutSummary, name='workout_summary'),
     path('achievements/', views.achievementsView, name='achievements'),
     path('leaderboards/', views.Leaderboard, name='leaderboards'),
+    path('change_username/', views.changeUsername, name='change_username'),
+    path('change_zipcode/', views.changeZipcode, name='change_zipcode'),
     # path('weather/', views.weather, name='weather'),
  ] 
  # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
