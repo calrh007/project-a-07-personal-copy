@@ -241,12 +241,15 @@ def workoutLinkedListView(request):
         return render(request, 'workout_app/workout_weather.html', context)
 
     if (request.GET.get('DeleteButton')):
+        if current_workout.profile != request.user:
+            return HttpResponseRedirect('/')
         WorkoutLinked.objects.filter(id=request.GET.get('DeleteButton')).delete()
         return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
 
     if (request.GET.get('EditButton')):
         current_workout = WorkoutLinked.objects.get(id=request.GET.get('EditButton'))
-
+        if current_workout.profile != request.user:
+            return HttpResponseRedirect('/')
         if request.method == 'POST':
             form = WorkoutLinkedForm(request.POST, instance = current_workout)
             if form.is_valid():

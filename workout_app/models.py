@@ -107,8 +107,8 @@ class WorkoutLinked(models.Model):
 
     raw_count = models.PositiveIntegerField(default = 0)
     second_raw_count = models.PositiveIntegerField(default = 0)
-    raw_set = models.PositiveIntegerField(default = 1)
-    raw_rep = models.PositiveIntegerField(default = 1)
+    raw_set = models.PositiveIntegerField(default = 1, verbose_name='Sets')
+    raw_rep = models.PositiveIntegerField(default = 1, verbose_name='Reps')
     weight = MeasurementField(
         blank = True,
         measurement=Weight,
