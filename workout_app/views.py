@@ -256,6 +256,10 @@ def workoutLinkedListView(request):
                 return HttpResponseRedirect('/workout_linked_list/')
         else:
             form = WorkoutLinkedForm(initial = model_to_dict(current_workout))
+        if 'weight' in form.errors:
+            messages.error(request, form.errors['weight'][0])
+        if 'dist' in form.errors:
+            messages.error(request, form.errors['dist'][0])
         return render(request, 'workout_app/edit_workout_linked.html', {'form': form})
 
     return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
@@ -463,7 +467,11 @@ def newWorkoutLinked(request):
             ots.save()
             return HttpResponseRedirect('/workout_linked_list')
     else:
-        form = WorkoutLinkedForm()
+        form = WorkoutLinkedForm(initial={'zipcode': request.user.profile.zipcode})
+    if 'weight' in form.errors:
+        messages.error(request, form.errors['weight'][0])
+    if 'dist' in form.errors:
+        messages.error(request, form.errors['dist'][0])
     return render(request, 'workout_app/add_workout_linked.html', {'form': form})
 
 def newWorkoutTypeCount(request):

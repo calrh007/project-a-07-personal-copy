@@ -73,14 +73,25 @@ INTENSITY_CHOICES = (
     ('NA', 'Not Applicable')
 )
 
+def validate_date_not_future(input_date):
+    if input_date > datetime.date.today():
+        raise ValidationError('Date cannot be in the future')
+
+def validate_positive_weight(input_weight):
+    if input_weight < Weight():
+        raise ValidationError('Weight cannot be negative')
+
+def validate_positive_dist(input_dist):
+    if input_dist < Distance():
+        raise ValidationError('Distance cannot be negative')
 
 class WorkoutLinked(models.Model):
     workoutType = models.ForeignKey(WorkoutType, on_delete=models.CASCADE)
     profile = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    zipcode = models.CharField(max_length=5, default='22904')
-    start_date = models.DateField(default=datetime.date.today)
+    zipcode = models.CharField(max_length=5, default='22904', validators=[validate_zip])
+    start_date = models.DateField(default=datetime.date.today, validators=[validate_date_not_future])
     one_day = models.BooleanField(default=True)
-    end_date = models.DateField(default=datetime.date.today)
+    end_date = models.DateField(default=datetime.date.today, validators=[validate_date_not_future])
     duration = models.DurationField(blank = True)
     intensity = models.CharField(
         max_length = 2,
@@ -90,7 +101,8 @@ class WorkoutLinked(models.Model):
     dist = MeasurementField(
         blank = True,
         measurement=Distance,
-        unit_choices=(("mi", "mi"), ("km", "km"), ("ft", "ft"), ("m", "m"))
+        unit_choices=(("mi", "mi"), ("km", "km"), ("ft", "ft"), ("m", "m")),
+        validators=[validate_positive_dist]
     )
 
     raw_count = models.PositiveIntegerField(default = 0)
@@ -100,7 +112,8 @@ class WorkoutLinked(models.Model):
     weight = MeasurementField(
         blank = True,
         measurement=Weight,
-        unit_choices=(("lb", "lb"), ("kg", "kg"))
+        unit_choices=(("lb", "lb"), ("kg", "kg")),
+        validators=[validate_positive_weight]
     )
 
     def get_year(self):
