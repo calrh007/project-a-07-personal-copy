@@ -267,7 +267,7 @@ def workoutLinkedListView(request):
 
     return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
 
-def leaderboard_context():
+def leaderboard_context(workout_types, workouts_to_consider):
     leader_board_context = []
     zero_dist = Distance()
     zero_dur = timedelta()
@@ -276,7 +276,7 @@ def leaderboard_context():
         dur_list = []
         dist_list = []
         for user in User.objects.all():
-            wotc = WorkoutLinked.objects.filter(profile=user, workoutType=wt)
+            wotc = workouts_to_consider.filter(profile=user, workoutType=wt)
             if wt.has_duration:
                 dur_tot = wotc.aggregate(Sum('duration'))['duration__sum']
                 if dur_tot is not None and dur_tot > zero_dur:
@@ -332,7 +332,22 @@ def Leaderboard(request):
         messages.error(request, LE)
         return HttpResponseRedirect('/login/')
     context = {}
-    context['leader_board'] = leaderboard_context()
+
+    all_workouts = WorkoutLinked.objects.all()
+    context['days_back_poss'] = ((0, 'All Time'), (365, 'Past Year'), (30, 'Past Month'), (7, 'Past Week'))
+    try:
+        days_back = int(request.GET.get('days_back', '0'))
+        if days_back < 0:
+            days_back = 0
+    except:
+        days_back = 0
+    if days_back > 0:
+        date_back = datetime.date.today() - datetime.timedelta(days=days_back)
+        temp_filter = all_workouts.filter(start_date__gte = date_back, one_day = True)
+        all_workouts = temp_filter | all_workouts.filter(end_date__gte = date_back, one_day = False)
+    context['days_back'] = days_back
+
+    context['leader_board'] = leaderboard_context(WorkoutType.objects.all(), all_workouts)
     return render(request, 'workout_app/leaderboard.html', context)
 
 def workoutSummary(request):
