@@ -267,11 +267,11 @@ def workoutLinkedListView(request):
 
     return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
 
-def leaderboard_context(workout_types, workouts_to_consider):
+def leaderboard_context(workout_types, workouts_to_consider, workout_type_counts):
     leader_board_context = []
     zero_dist = Distance()
     zero_dur = timedelta()
-    for wt in WorkoutType.objects.all():
+    for wt in workout_types:
         leader_board_context.append((wt, []))
         dur_list = []
         dist_list = []
@@ -298,7 +298,7 @@ def leaderboard_context(workout_types, workouts_to_consider):
         if not leader_board_context[-1][0]:
             leader_board_context.pop()
     leader_board_context.append(('Workout Count Components', []))
-    for ct in WorkoutTypeCount.objects.all():
+    for ct in workout_type_counts:
         ct_list = []
         for user in User.objects.all():
             cc = 0
@@ -321,10 +321,7 @@ def leaderboard_context(workout_types, workouts_to_consider):
                 else:
                     ct_list_proc.append((ct_list_proc[-1][0] + 1, ct_list[i][0], ct_list[i][1]))
             leader_board_context[-1][1].append(('Total ' + str(ct), ct_list_proc))
-    if not leader_board_context[-1][0]:
-        leader_board_context.pop()
-    # print(leader_board_context)
-    # return []
+    leader_board_context = [lbi for lbi in leader_board_context if lbi[1]]
     return leader_board_context
 
 def Leaderboard(request):
@@ -336,7 +333,7 @@ def Leaderboard(request):
     all_workouts = WorkoutLinked.objects.all()
     context['days_back_poss'] = ((0, 'All Time'), (365, 'Past Year'), (30, 'Past Month'), (7, 'Past Week'))
     try:
-        days_back = int(request.GET.get('days_back', '0'))
+        days_back = int(request.GET.get('days_back', '7'))
         if days_back < 0:
             days_back = 0
     except:
@@ -347,7 +344,33 @@ def Leaderboard(request):
         all_workouts = temp_filter | all_workouts.filter(end_date__gte = date_back, one_day = False)
     context['days_back'] = days_back
 
-    context['leader_board'] = leaderboard_context(WorkoutType.objects.all(), all_workouts)
+    only_participating_str = request.GET.get('only_participating', 'True')
+    if only_participating_str == 'False':
+        only_participating = False
+    else:
+        only_participating = True
+    context['only_participating'] = only_participating
+
+    user_workouts = all_workouts.filter(profile=request.user)
+    if only_participating:
+        workout_types = []
+        for wt in WorkoutType.objects.all():
+            if user_workouts.filter(workoutType=wt).exists():
+                workout_types.append(wt)
+    else:
+        workout_types = WorkoutType.objects.all()
+
+    if only_participating:
+        workout_type_counts = set()
+        for wt in workout_types:
+            if wt.has_first_count_component:
+                workout_type_counts.add(wt.first_count_component)
+            if wt.has_second_count_component:
+                workout_type_counts.add(wt.second_count_component)
+    else:
+        workout_type_counts = WorkoutTypeCount.objects.all()
+
+    context['leader_board'] = leaderboard_context(workout_types, all_workouts, workout_type_counts)
     return render(request, 'workout_app/leaderboard.html', context)
 
 def workoutSummary(request):

@@ -28,6 +28,17 @@
     {% endfor %}
     </span>
     </div>
+
+    <div>Workouts: <span style="color: #387FF0">
+        {% if only_participating %}
+            <u><a href="?{% url_replace request 'only_participating' True %}">Only Participating Workouts</a></u> / 
+            <a href="?{% url_replace request 'only_participating' False %}">All Workouts</a>
+        {% else %}
+            <a href="?{% url_replace request 'only_participating' True %}">Only Participating Workouts</a> / 
+            <u><a href="?{% url_replace request 'only_participating' False %}">All Workouts</a></u>
+        {% endif %}
+    </span>
+    </div>
 </div>
 
 <div style="height:15px;"></div>
@@ -73,7 +84,9 @@
         </div>
     {% endfor %}
 {% else %}
-    <p>No such leaderboards are available.</p>
+    <div class="col text-center">
+        <h4 style="padding:5px; text-align:center"><i>No such leaderboards are available</i></h4>
+    </div>
 {% endif %}
 
 {% endblock %}
