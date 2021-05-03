@@ -458,7 +458,7 @@ def workoutSummary(request):
                     rt += (iw.raw_set * iw.raw_rep)
                 avg_rps = rt / st
                 context['wts'][wt].append(('Total Sets', st))
-                context['wts'][wt].append(('Average Reps per Set', avg_rps))
+                context['wts'][wt].append(('Average Reps per Set', round(avg_rps, 2)))
                 context['wts'][wt].append(('Total Reps', rt))
                 if weight_tot != 0:
                     weight_tot_w = Weight()
