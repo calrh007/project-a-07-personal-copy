@@ -45,7 +45,7 @@ class Profile(models.Model):
         return str(self.user)
 
 class WorkoutTypeCount(models.Model):
-    profile = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    profile = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
     type_name = models.CharField(max_length=30, default='')
     def __str__(self):
         return self.type_name
@@ -62,7 +62,7 @@ class WorkoutType(models.Model):
     has_set_rep_comp = models.BooleanField(default=False)
     has_weight_comp = models.BooleanField(default=False)
     is_official_type = models.BooleanField(default=False)
-    profile = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    profile = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
     def __str__(self):
         return self.type_name
 

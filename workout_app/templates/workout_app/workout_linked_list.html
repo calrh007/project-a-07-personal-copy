@@ -1,4 +1,5 @@
 {% extends "workout_app/base.html" %}
+{% load custom_tags %}
 
 {% block content %}
 <div class="col text-center">
@@ -24,7 +25,7 @@
                     <p style="color: black"><b>Duration: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.duration }}</span></p>
                 {% endif %}
                 {% if workout_linked.workoutType.has_distance_comp %}
-                    <p style="color: black"><b>Distance: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.dist }}</span></p>
+                    <p style="color: black"><b>Distance: </b> <span style="font-weight:lighter; font-size:20px">{% round_if_measurement workout_linked.dist %}</span></p>
                 {% endif %}
                 {% if workout_linked.workoutType.has_first_count_component %}
                     <p style="color: black"><b>{{workout_linked.workoutType.first_count_component}}: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.raw_count }}</span></p>
@@ -37,7 +38,7 @@
                     <p style="color: black"><b>Reps: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.raw_rep }}</span></p>
                 {% endif %}
                 {% if workout_linked.workoutType.has_weight_comp %}
-                    <p style="color: black"><b>Weight: </b> <span style="font-weight:lighter; font-size:20px">{{ workout_linked.weight }}</span></p>
+                    <p style="color: black"><b>Weight: </b> <span style="font-weight:lighter; font-size:20px">{% round_if_measurement workout_linked.weight %}</span></p>
                 {% endif %}
 
                 <div class="row">

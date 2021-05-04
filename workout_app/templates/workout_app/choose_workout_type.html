@@ -1,0 +1,24 @@
+{% extends "workout_app/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h1 style="text-align:center; padding:15px">Add Workout</h1>
+<div class="text-center">
+  <p>Choose the workout type to add</p>
+</div>
+<div class="mx-auto" style="width:40%">
+  <form action="" method="post">
+      {% csrf_token %}
+        {{ form|crispy }}
+        <div class="text-center">
+          <button type="submit" name="Change Username" class="btn btn-dark">Confirm Workout Type</button>
+        </div>
+  </form>
+  <div class="text-center" style="padding:10px">
+    <!-- <a href="/login"><button class="btn btn-outline-secondary">Back to Account Info</button></a> -->
+  </div>
+</div>
+
+{% endblock %}

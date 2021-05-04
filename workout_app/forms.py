@@ -46,6 +46,39 @@ class WorkoutLinkedForm(forms.ModelForm):
             'duration': forms.TextInput(attrs={'placeholder': 'HH:MM:SS'}),
         }
 
+class ChooseWorkoutTypeForm(forms.Form):
+    workout_type = forms.ModelChoiceField(WorkoutType.objects.all())
+
+class ModularWorkoutLinkedForm(forms.ModelForm):
+    class Meta:
+        model = WorkoutLinked
+        exclude = ['profile', 'workoutType']
+        widgets = {
+            'duration': forms.TextInput(attrs={'placeholder': 'HH:MM:SS'}),
+        }
+    def __init__(self, *args, **kwargs):
+        self.workout_type_inp = kwargs.pop('workout_type')
+        super(ModularWorkoutLinkedForm, self).__init__(*args, **kwargs)
+        if not self.workout_type_inp.has_intensity:
+            self.fields.pop('intensity')
+        if not self.workout_type_inp.has_duration:
+            self.fields.pop('duration')
+        if not self.workout_type_inp.has_distance_comp:
+            self.fields.pop('dist')
+        if not self.workout_type_inp.has_first_count_component:
+            self.fields.pop('raw_count')
+        else:
+            self.fields['raw_count'].label = self.workout_type_inp.first_count_component.type_name
+        if not self.workout_type_inp.has_second_count_component:
+            self.fields.pop('second_raw_count')
+        else:
+            self.fields['second_raw_count'].label = self.workout_type_inp.second_count_component.type_name
+        if not self.workout_type_inp.has_set_rep_comp:
+            self.fields.pop('raw_set')
+            self.fields.pop('raw_rep')
+        if not self.workout_type_inp.has_weight_comp:
+            self.fields.pop('weight')
+
 class WorkoutTypeCountForm(forms.ModelForm):
     class Meta:
         model = WorkoutTypeCount

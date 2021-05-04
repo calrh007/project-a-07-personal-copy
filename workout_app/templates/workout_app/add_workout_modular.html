@@ -1,0 +1,28 @@
+{% extends "workout_app/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h1 style="text-align:center; padding:15px">Add Workout</h1>
+<h5 style="text-align:center; padding:15px">Selected Workout Type: {{ workout_type_context }}</h5>
+<div class="mx-auto" style="max-width: 50rem;">
+  <!-- <p style="color: #387FF0"><a href="{% url 'add_workout_linked'%}" style="color: #387FF0">Add Workout</a> / <a href="{% url 'add_workout_type'%}" style="color:#387FF0">Add Workout Type</a> / <a href="{% url 'add_workout_type_count' %}" style="color: #387FF0">Add Count Type</a></p>
+  <p>Don't see your workout on the current list of workout types? Click on "Add a New Workout Type" above to enter the workout into the system. You will then see the workout listed under the workout type dropdown.</p> -->
+  <form action="" method="post">
+      {% csrf_token %}
+        {% comment %}
+        <p style="font-size:17px;">Add a new workout type: </p>
+        <div class="mb-4">
+          <a href="{% url 'add_workout_type'%}" class="btn btn-secondary">Add New Workout Type</a>
+        </div>
+        {% endcomment %}
+        {{ form|crispy }}
+        <div class="text-right">
+          <button type="submit" name="Upload Workout" class="btn btn-dark">Upload Workout</button>
+          <button type="reset" name="Reset" class="btn btn-secondary">Reset</button>
+        </div>
+  </form>
+</div>
+
+{% endblock %}

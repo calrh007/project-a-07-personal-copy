@@ -5,7 +5,7 @@ from django.views import generic
 # from .models import Workout
 # from .forms import WorkoutForm
 
-from .forms import WorkoutTypeForm, WorkoutLinkedForm, WorkoutTypeCountForm, CityForm, UsernameChangeForm, ZipChangeForm
+from .forms import WorkoutTypeForm, WorkoutLinkedForm, WorkoutTypeCountForm, CityForm, UsernameChangeForm, ZipChangeForm, ModularWorkoutLinkedForm, ChooseWorkoutTypeForm
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from .models import WorkoutLinked
@@ -241,9 +241,10 @@ def workoutLinkedListView(request):
         return render(request, 'workout_app/workout_weather.html', context)
 
     if (request.GET.get('DeleteButton')):
+        current_workout = WorkoutLinked.objects.get(id=request.GET.get('DeleteButton'))
         if current_workout.profile != request.user:
             return HttpResponseRedirect('/')
-        WorkoutLinked.objects.filter(id=request.GET.get('DeleteButton')).delete()
+        current_workout.delete()
         return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
 
     if (request.GET.get('EditButton')):
@@ -251,14 +252,14 @@ def workoutLinkedListView(request):
         if current_workout.profile != request.user:
             return HttpResponseRedirect('/')
         if request.method == 'POST':
-            form = WorkoutLinkedForm(request.POST, instance = current_workout)
+            form = ModularWorkoutLinkedForm(request.POST, instance = current_workout, workout_type = current_workout.workoutType)
             if form.is_valid():
                 ots = form.save(commit=False)
                 ots.profile = request.user
                 ots.save()
                 return HttpResponseRedirect('/workout_linked_list/')
         else:
-            form = WorkoutLinkedForm(initial = model_to_dict(current_workout))
+            form = ModularWorkoutLinkedForm(initial = model_to_dict(current_workout), workout_type = current_workout.workoutType)
         if 'weight' in form.errors:
             messages.error(request, form.errors['weight'][0])
         if 'dist' in form.errors:
@@ -391,26 +392,20 @@ def workoutSummary(request):
 
     user_workouts = WorkoutLinked.objects.filter(profile=request.user)
     try:
-        days_back = int(request.GET.get('days_back', '0'))
+        days_back = int(request.GET.get('days_back', '30'))
         if days_back < 0:
-            days_back = 0
+            days_back = 30
     except:
-        days_back = 0
+        days_back = 30
     if days_back > 0:
         date_back = datetime.date.today() - datetime.timedelta(days=days_back)
         temp_filter = user_workouts.filter(start_date__gte = date_back, one_day = True)
         user_workouts = temp_filter | user_workouts.filter(end_date__gte = date_back, one_day = False)
     context = {}
-    if days_back == 0:
-        context['time_per'] = 'All Time'
-    elif days_back == 365:
-        context['time_per'] = 'Past Year'
-    elif days_back == 30:
-        context['time_per'] = 'Past Month'
-    elif days_back == 7:
-        context['time_per'] = 'Past Week'
-    else:
-        context['time_per'] = 'Past ' + str(days_back) + ' Days'
+
+    context['days_back_poss'] = ((0, 'All Time'), (365, 'Past Year'), (30, 'Past Month'), (7, 'Past Week'))
+    context['days_back'] = days_back
+
     context['wts'] = {}
     context['cts'] = {}
     for wt in WorkoutType.objects.all():
@@ -498,6 +493,42 @@ def changeUsername(request):
     else:
         form = UsernameChangeForm(initial={'username': request.user.username})
     return render(request, 'workout_app/username_change.html', {'form': form})
+
+def chooseTypeAddModularWorkout(request):
+    if request.user.is_anonymous:
+        messages.error(request, LE)
+        return HttpResponseRedirect('/login/')
+    if request.method == 'POST':
+        form = ChooseWorkoutTypeForm(request.POST)
+        if form.is_valid():
+            workout_type = form.cleaned_data['workout_type']
+            return HttpResponseRedirect('/add_workout_modular/' + '?WorkoutTypeParam=' + str(workout_type.id))
+    else:
+        form = ChooseWorkoutTypeForm()
+    return render(request, 'workout_app/choose_workout_type.html', {'form': form})
+
+def addModularWorkout(request):
+    if request.user.is_anonymous:
+        messages.error(request, LE)
+        return HttpResponseRedirect('/login/')
+    if not request.GET.get('WorkoutTypeParam'):
+        return HttpResponseRedirect('/')
+    workout_type_param = WorkoutType.objects.get(id=request.GET.get('WorkoutTypeParam'))
+    if request.method == 'POST':
+        form = ModularWorkoutLinkedForm(request.POST, workout_type = workout_type_param)
+        if form.is_valid():
+            ots = form.save(commit=False)
+            ots.profile = request.user
+            ots.workoutType = workout_type_param
+            ots.save()
+            return HttpResponseRedirect('/workout_linked_list')
+    else:
+        form = ModularWorkoutLinkedForm(workout_type = workout_type_param)
+    if 'weight' in form.errors:
+        messages.error(request, form.errors['weight'][0])
+    if 'dist' in form.errors:
+        messages.error(request, form.errors['dist'][0])
+    return render(request, 'workout_app/add_workout_modular.html', {'form': form, 'workout_type_context' : workout_type_param})
 
 def changeZipcode(request):
     if request.user.is_anonymous:
