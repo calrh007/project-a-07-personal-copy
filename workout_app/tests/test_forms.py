@@ -1,6 +1,6 @@
-from django.test import SimpleTestCase
-from workout_app.forms import WorkoutTypeForm
-from workout_app.models import WorkoutType, WorkoutLinked, WorkoutTypeCount, Achievement
+from django.test import SimpleTestCase, TestCase
+from workout_app.forms import WorkoutTypeForm, UsernameChangeForm, ZipChangeForm, WorkoutLinkedForm, WorkoutTypeCountForm, CityForm
+from workout_app.models import WorkoutType, WorkoutLinked, WorkoutTypeCount, Achievement, User, Profile, City
 
 class TestForms(SimpleTestCase):
 
@@ -13,20 +13,47 @@ class TestForms(SimpleTestCase):
 
         self.assertFalse(form.is_valid())
 
-    def test_WorkoutLinked_valid_data(self):
+    def test_UsernameChangeForm_valid_data(self):
 
-        form = WorkoutTypeForm({
+        form = UsernameChangeForm({
+            'model': User,
+            'fields': ['username']
+        })
+
+        self.assertFalse(form.is_valid())
+
+    def test_ZipChangeForm_valid_data(self):
+
+        form = ZipChangeForm({
+            'model': Profile,
+            'fields': ['zipcode']
+        })
+
+        self.assertFalse(form.is_valid())
+
+    def test_WorkoutLinkedForm_valid_data(self):
+
+        form = WorkoutLinkedForm({
             'model': WorkoutLinked,
-            'exclude': ['profile']
+            'exclude': ['profile'],
         })
 
         self.assertFalse(form.is_valid())
 
     def test_WorkoutTypeCount_valid_data(self):
 
-        form = WorkoutTypeForm({
+        form = WorkoutTypeCountForm({
             'model': WorkoutTypeCount,
             'exclude': ['profile']
+        })
+
+        self.assertFalse(form.is_valid())
+
+    def test_CityForm_valid_data(self):
+
+        form = CityForm({
+            'model': City,
+            'fields': ['name'],
         })
 
         self.assertFalse(form.is_valid())
