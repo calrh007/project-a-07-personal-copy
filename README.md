@@ -39,5 +39,5 @@ We built this project using Django + Bootstrap along with additional Python and 
 - Pillow
 - pgeocode
 
-In addition to the packages listed above, we incorporated a weather API to gather the information on the weather for each workout.  
-:link: Link to API: https://openweathermap.org/api
+In addition to the packages listed above, we incorporated a weather API to gather the information on the weather on the day of each workout.  
+:link: Link to OpenWeather's API: https://openweathermap.org/api
