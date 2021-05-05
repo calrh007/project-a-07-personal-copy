@@ -259,7 +259,9 @@ def workoutLinkedListView(request):
                 ots.save()
                 return HttpResponseRedirect('/workout_linked_list/')
         else:
-            form = ModularWorkoutLinkedForm(initial = model_to_dict(current_workout), workout_type = current_workout.workoutType)
+            intial_dict = model_to_dict(current_workout)
+            intial_dict['date_range'] = intial_dict['start_date'].strftime('%m/%d/%Y') + " - " + intial_dict['end_date'].strftime('%m/%d/%Y')
+            form = ModularWorkoutLinkedForm(initial = intial_dict, workout_type = current_workout.workoutType)
         if 'weight' in form.errors:
             messages.error(request, form.errors['weight'][0])
         if 'dist' in form.errors:
@@ -299,6 +301,7 @@ def leaderboard_context(workout_types, workouts_to_consider, workout_type_counts
                 leader_board_context[-1][1].append((t, list_proc))
         if not leader_board_context[-1][0]:
             leader_board_context.pop()
+            print("lbcp")
     leader_board_context.append(('Workout Count Components', []))
     for ct in workout_type_counts:
         ct_list = []
@@ -325,6 +328,7 @@ def leaderboard_context(workout_types, workouts_to_consider, workout_type_counts
                     ct_list_proc.append((ct_list_proc[-1][0] + 1, ct_list[i][0], ct_list[i][1]))
             leader_board_context[-1][1].append(('Total ' + str(ct), ct_list_proc))
     leader_board_context = [lbi for lbi in leader_board_context if lbi[1]]
+    print(leader_board_context)
     return leader_board_context
 
 def Leaderboard(request):
@@ -588,7 +592,7 @@ def newWorkoutTypeCount(request):
             ots = form.save(commit=False)
             ots.profile = request.user
             ots.save()
-            return HttpResponseRedirect('/add_workout_linked/')
+            return HttpResponseRedirect('/add_workout_type/')
     else:
         form = WorkoutTypeCountForm()
     return render(request, 'workout_app/add_workout_type_count.html', {'form': form})

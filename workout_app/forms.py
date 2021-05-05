@@ -6,6 +6,9 @@ from django.contrib.auth.models import User
 
 from .models import Profile
 
+import datetime
+from django.core.exceptions import ValidationError
+
 # class WorkoutForm(forms.ModelForm):
 #     class Meta:
 #         model = Workout
@@ -55,10 +58,18 @@ class ModularWorkoutLinkedForm(forms.ModelForm):
         exclude = ['profile', 'workoutType']
         widgets = {
             'duration': forms.TextInput(attrs={'placeholder': 'HH:MM:SS'}),
+            'start_date': forms.widgets.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.widgets.DateInput(attrs={'type': 'date', 'class': 'hidden'}),
         }
     def __init__(self, *args, **kwargs):
         self.workout_type_inp = kwargs.pop('workout_type')
         super(ModularWorkoutLinkedForm, self).__init__(*args, **kwargs)
+        self.fields['date_range'] = forms.CharField()
+        self.fields['date_range'].help_text = "For single day workouts select a range of one day. Workouts can't be added for dates in the future."
+        self.fields['start_date'].widget = forms.HiddenInput()
+        self.fields['one_day'].widget = forms.HiddenInput()
+        self.fields['end_date'].widget = forms.HiddenInput()
+        self.order_fields(['zipcode', 'date_range'])
         if not self.workout_type_inp.has_intensity:
             self.fields.pop('intensity')
         if not self.workout_type_inp.has_duration:
@@ -78,6 +89,20 @@ class ModularWorkoutLinkedForm(forms.ModelForm):
             self.fields.pop('raw_rep')
         if not self.workout_type_inp.has_weight_comp:
             self.fields.pop('weight')
+    def clean(self):
+        cleaned_data = super(ModularWorkoutLinkedForm, self).clean()
+        rsm, rsd, rsy = cleaned_data['date_range'].split(" - ")[0].split("/")
+        rsdt = datetime.date(int(rsy), int(rsm), int(rsd))
+        rem, red, rey = cleaned_data['date_range'].split(" - ")[1].split("/")
+        redt = datetime.date(int(rey), int(rem), int(red))
+        if redt > datetime.date.today():
+            raise ValidationError({'date_range': 'Dates cannot be in the future'})
+        cleaned_data['start_date'] = rsdt.isoformat()
+        cleaned_data['end_date'] = redt.isoformat()
+        if rsdt == redt:
+            cleaned_data['one_day'] = True
+        else:
+            cleaned_data['one_day'] = False
 
 class WorkoutTypeCountForm(forms.ModelForm):
     class Meta:
