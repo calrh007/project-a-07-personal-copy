@@ -152,7 +152,7 @@ def achievementEarned(achivement, workouts):
             m26t = m26.ElapsedTime(int(wo.duration.total_seconds()))
             m26s = m26.Speed(m26d, m26t)
             try:
-                t = datetime.strptime(m26s.pace_per_mile(),"%M:%S.%f")
+                t = datetime.datetime.strptime(m26s.pace_per_mile(),"%M:%S.%f")
                 if timedelta(hours=t.hour, minutes=t.minute, seconds=t.second) <= achivement.max_pace_per_mile:
                     satis = True
                     break
@@ -558,7 +558,7 @@ def newWorkoutType(request):
             ots = form.save(commit=False)
             ots.profile = request.user
             ots.save()
-            return HttpResponseRedirect('/add_workout_linked/')
+            return HttpResponseRedirect('/add_workout_choose_type/')
     else:
         form = WorkoutTypeForm()
     return render(request, 'workout_app/add_workout_type.html', {'form': form})
