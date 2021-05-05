@@ -23,6 +23,8 @@ urlpatterns = [
     path('leaderboards/', views.Leaderboard, name='leaderboards'),
     path('change_username/', views.changeUsername, name='change_username'),
     path('change_zipcode/', views.changeZipcode, name='change_zipcode'),
+    path('add_workout_modular/', views.addModularWorkout, name='add_workout_modular'),
+    path('add_workout_choose_type/', views.chooseTypeAddModularWorkout, name='add_workout_choose_type')
     # path('weather/', views.weather, name='weather'),
  ] 
  # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

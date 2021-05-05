@@ -3,9 +3,25 @@
 
 {% block content %}
 <div class="col text-center">
-    <h1 style="padding:15px">Your Workout Summaries: {{ time_per }}</h1>
-    <div>Time Period: </div><div style="color: #387FF0"><a href="?{% url_replace request 'days_back' 0 %}" style="color: #387FF0">All time</a> / <a href="?{% url_replace request 'days_back' 365 %}" style="color:#387FF0">Past Year</a> / <a href="?{% url_replace request 'days_back' 30 %}" style="color:#387FF0">Past Month</a> / <a href="?{% url_replace request 'days_back' 7 %}" style="color:#387FF0">Past Week</a></div>
-    <h2 style="padding:15px">Workout Type Summaries</h2>
+    <h1 style="padding:15px">Your Workout Summaries</h1>
+    <div style="padding:10px">Time Period: <span style="color: #387FF0">
+        {% for days, mess in days_back_poss|slice:":-1" %}
+            {% if days == days_back %}
+                <u><a href="?{% url_replace request 'days_back' days %}">{{mess}}</a></u> / 
+            {% else %}
+                <a href="?{% url_replace request 'days_back' days %}">{{mess}}</a> / 
+            {% endif %}
+        {% endfor %}
+        {% for days, mess in days_back_poss|slice:"-1:" %}
+            {% if days == days_back %}
+                <u><a href="?{% url_replace request 'days_back' days %}">{{mess}}</a></u>
+            {% else %}
+                <a href="?{% url_replace request 'days_back' days %}">{{mess}}</a>
+            {% endif %}
+        {% endfor %}
+        </span>
+    </div>
+    <!-- <h2 style="padding:15px">Workout Type Summaries</h2> -->
     {% if wts %}
         {% for wt, wta in wts.items %}
         <div class="card mx-auto mb-3" style="max-width: 30rem;">
@@ -19,13 +35,6 @@
             </div>
         </div>
         {% endfor %}
-    {% else %}
-        <div class="col text-center">
-            <h4 style="padding:5px; text-align:center"><i>No such workout type summaries are available</i></h4>
-        </div>
-    {% endif %}
-    <h2 style="padding:15px">Count Type Summaries</h2>
-    {% if cts %}
         {% for wtc, c in cts.items %}
         <div class="card mx-auto mb-3" style="max-width: 30rem;">
             <div class="card-header" style="background-color:#eef4fe">
@@ -37,10 +46,24 @@
         </div>
         {% endfor %}
     {% else %}
-        <div class="col text-center">
-            <h4 style="padding:5px; text-align:center"><i>No such workout count type summaries are available</i></h4>
-        </div>
+        {% if cts %}
+            {% for wtc, c in cts.items %}
+            <div class="card mx-auto mb-3" style="max-width: 30rem;">
+                <div class="card-header" style="background-color:#eef4fe">
+                    <h2 style="color: black; font-weight:bold"><span style="float:left; font-weight:bold; font-size:25px">{{ wtc }} </span>
+                    <span style="float:right">
+                        {{ c }}
+                    </span></h2>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col text-center">
+                <h4 style="padding:5px; text-align:center"><i>No such workout summaries are available</i></h4>
+            </div>
+        {% endif %}
     {% endif %}
+    <!-- <h2 style="padding:15px">Count Type Summaries</h2> -->
 
 </div>
 {% endblock %}

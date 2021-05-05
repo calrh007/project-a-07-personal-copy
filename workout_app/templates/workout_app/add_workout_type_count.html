@@ -4,9 +4,9 @@
 
 {% block content %}
 
-<h1 style="text-align:center; padding:15px">Add Workout Type Count</h1>
-<div class="mx-auto" style="width:40%">
-  <p style="color: #387FF0"><a href="{% url 'add_workout_linked'%}" style="color: #387FF0">Add Workout</a> / <a href="{% url 'add_workout_type'%}" style="color:#387FF0">Add Workout Type</a> / <a href="{% url 'add_workout_type_count' %}" style="color: #387FF0">Add Count Type</a></p>
+<h1 style="text-align:center; padding:15px">Advanced Users: Add Workout Type Count</h1>
+<div class="mx-auto" style="max-width: 50rem;">
+  <p style="color: #387FF0"><a href="{% url 'add_workout_choose_type'%}" style="color: #387FF0">Add Workout</a> / <a href="{% url 'add_workout_type'%}" style="color:#387FF0">Add Workout Type</a> / <a href="{% url 'add_workout_type_count' %}" style="color: #387FF0">Add Count Type</a></p>
   <p>Adding a "count type" is for anything you wish to count during a workout! For example, steps or calories are something you might want to count for a workout. A workout can have 0, 1, or 2 count types.</p>
   <form action="" method="post">
       {% csrf_token %}

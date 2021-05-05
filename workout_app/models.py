@@ -45,7 +45,7 @@ class Profile(models.Model):
         return str(self.user)
 
 class WorkoutTypeCount(models.Model):
-    profile = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    profile = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
     type_name = models.CharField(max_length=30, default='')
     def __str__(self):
         return self.type_name
@@ -54,15 +54,15 @@ class WorkoutType(models.Model):
     type_name = models.CharField(max_length=30, default='')
     has_intensity = models.BooleanField(default=False)
     has_duration = models.BooleanField(default=False)
-    has_distance_comp = models.BooleanField(default=False)
+    has_distance_comp = models.BooleanField(default=False, verbose_name="has distance component")
     has_first_count_component = models.BooleanField(default=False)
-    first_count_component = models.ForeignKey(WorkoutTypeCount, on_delete=models.CASCADE, null=True, blank=True)
+    first_count_component = models.ForeignKey(WorkoutTypeCount, on_delete=models.CASCADE, null=True, blank=True, verbose_name="first count component (if applicable)")
     has_second_count_component = models.BooleanField(default=False)
-    second_count_component = models.ForeignKey(WorkoutTypeCount, on_delete=models.CASCADE, related_name='second_cc', null=True, blank=True)
-    has_set_rep_comp = models.BooleanField(default=False)
-    has_weight_comp = models.BooleanField(default=False)
+    second_count_component = models.ForeignKey(WorkoutTypeCount, on_delete=models.CASCADE, related_name='second_cc', null=True, blank=True, verbose_name="second count component (if applicable)")
+    has_set_rep_comp = models.BooleanField(default=False, verbose_name="has set/rep component")
+    has_weight_comp = models.BooleanField(default=False, verbose_name="has weight component")
     is_official_type = models.BooleanField(default=False)
-    profile = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    profile = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
     def __str__(self):
         return self.type_name
 

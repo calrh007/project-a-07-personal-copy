@@ -1,0 +1,27 @@
+{% extends "workout_app/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h1 style="text-align:center; padding:15px">Add Workout</h1>
+<div class="text-center" style="padding:0px 15px 15px 15px">
+  <p>Choose the workout type to add</p>
+  <a tabindex="0" class="btn btn-outline-secondary btn-sm" role="button" data-toggle="popover" data-trigger="focus" title="For Advanced Users" data-content="Add a custom workout type using the following link:<br> <a href='{% url 'add_workout_type'%}' style='color:#387FF0'>Add Custom Workout Type</a><br><i>Note that the provided instructions must be followed to ensure that the custom workout type performs as expected</i>">
+    Desired workout not available?
+  </a>
+</div>
+<div class="mx-auto" style="width:40%">
+  <form action="" method="post">
+      {% csrf_token %}
+        {{ form|crispy }}
+        <div class="text-center">
+          <button type="submit" name="Change Username" class="btn btn-dark">Confirm Workout Type</button>
+        </div>
+  </form>
+  <div class="text-center" style="padding:10px">
+    <!-- <a href="/login"><button class="btn btn-outline-secondary">Back to Account Info</button></a> -->
+  </div>
+</div>
+
+{% endblock %}
