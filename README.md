@@ -41,3 +41,5 @@ We built this project using Django + Bootstrap along with additional Python and 
 
 In addition to the packages listed above, we incorporated a weather API to gather the information on the weather on the day of each workout.  
 :link: Link to OpenWeather's API: https://openweathermap.org/api
+
+We modified a free HTML template as a home page: https://www.free-css.com/free-css-templates/page250/runner-onepage
