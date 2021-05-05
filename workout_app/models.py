@@ -46,12 +46,12 @@ class Profile(models.Model):
 
 class WorkoutTypeCount(models.Model):
     profile = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
-    type_name = models.CharField(max_length=30, default='')
+    type_name = models.CharField(max_length=30, default='', unique=True)
     def __str__(self):
         return self.type_name
 
 class WorkoutType(models.Model):
-    type_name = models.CharField(max_length=30, default='')
+    type_name = models.CharField(max_length=30, default='', unique=True)
     has_intensity = models.BooleanField(default=False)
     has_duration = models.BooleanField(default=False)
     has_distance_comp = models.BooleanField(default=False, verbose_name="has distance component")
