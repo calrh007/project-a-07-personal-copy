@@ -64,6 +64,7 @@ class ModularWorkoutLinkedForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.workout_type_inp = kwargs.pop('workout_type')
         super(ModularWorkoutLinkedForm, self).__init__(*args, **kwargs)
+        self.fields['duration'].help_text = 'Format HH:MM:SS'
         self.fields['date_range'] = forms.CharField()
         self.fields['date_range'].help_text = "For single day workouts select a range of one day. Workouts can't be added for dates in the future."
         self.fields['start_date'].widget = forms.HiddenInput()
