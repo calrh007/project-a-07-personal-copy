@@ -49,7 +49,7 @@ class TestForms(SimpleTestCase):
 
         self.assertFalse(form.is_valid())
 
-    def test_CityForm_valid_data(self):
+    def test_CityFormIs_valid_data(self):
 
         form = CityForm({
             'model': City,
