@@ -1,3 +1,17 @@
+"""
+*  REFERENCES
+*  Title: m26 - calculations for sports like running, cycling, and swimming
+*  Author: Christopher Joakim
+*  Code version: 0.2.1
+*  URL: https://pypi.org/project/m26/
+*  Software License: MIT
+*
+*  Title: pgeocode
+*  Author: Roman Yurchak
+*  Code version: 0.3.0
+*  URL: https://pypi.org/project/pgeocode/
+*  Software License: BSD License (BSD)
+"""
 from django.shortcuts import render
 import requests
 from django.views import generic
@@ -26,7 +40,7 @@ import datetime
 import pgeocode
 
 from django.contrib.auth.models import User
-from django.db.models import Sum
+from django.db.models import Sum, Max, F
 
 LE = 'Please login before viewing or submitting this'
 
@@ -270,14 +284,30 @@ def workoutLinkedListView(request):
 
     return render(request, 'workout_app/workout_linked_list.html', {'user_workouts': user_workouts})
 
+def lb_proccess_list(upl, num_spots, cat_name):
+    upl.sort(key=lambda x:x[0], reverse=True)
+    upl = upl[:num_spots]
+    list_proc = [(1, upl[0][0], upl[0][1])]
+    for i in range(1, len(upl)):
+        if upl[i][0] == upl[i - 1][0]:
+            list_proc.append((list_proc[-1][0], upl[i][0], upl[i][1]))
+        else:
+            list_proc.append((list_proc[-1][0] + 1, upl[i][0], upl[i][1]))
+    return (cat_name, list_proc)
+
 def leaderboard_context(workout_types, workouts_to_consider, workout_type_counts, num_spots):
     leader_board_context = []
     zero_dist = Distance()
+    zero_weight = Weight()
     zero_dur = timedelta()
     for wt in workout_types:
         leader_board_context.append((wt, []))
         dur_list = []
         dist_list = []
+        weight_list = []
+        reps_list = []
+        fc_list = []
+        sc_list = []
         for user in User.objects.all():
             wotc = workouts_to_consider.filter(profile=user, workoutType=wt)
             if wt.has_duration:
@@ -288,20 +318,27 @@ def leaderboard_context(workout_types, workouts_to_consider, workout_type_counts
                 dist_tot = wotc.aggregate(Sum('dist'))['dist__sum']
                 if dist_tot is not None and dist_tot > zero_dist:
                     dist_list.append((dist_tot, user))
-        for l, t in [(dur_list, 'Total Duration'), (dist_list, 'Total Distance')]:
+            if wt.has_weight_comp:
+                max_weight = wotc.aggregate(Max('weight'))['weight__max']
+                if max_weight is not None and max_weight > zero_weight:
+                    weight_list.append((max_weight, user))
+            if wt.has_set_rep_comp:
+                tot_reps = wotc.aggregate(sum=Sum(F('raw_set') * F('raw_rep')))['sum']
+                print(tot_reps)
+                if tot_reps is not None and tot_reps > 0:
+                    reps_list.append((tot_reps, user))
+            if wt.has_first_count_component:
+                tot_fc = wotc.aggregate(Sum('raw_count'))['raw_count__sum']
+                if tot_fc is not None and tot_fc > 0:
+                    fc_list.append((tot_fc, user))
+            if wt.has_second_count_component:
+                tot_sc = wotc.aggregate(Sum('second_raw_count'))['second_raw_count__sum']
+                if tot_sc is not None and tot_sc > 0:
+                    sc_list.append((tot_sc, user))
+        for l, t in [(dur_list, 'Total Duration'), (dist_list, 'Total Distance'), (weight_list, 'Maximum Weight'), (reps_list, 'Total Reps'), (fc_list, 'Total ' + str(wt.first_count_component)), (sc_list, 'Total ' + str(wt.second_count_component))]:
             if l:
-                l.sort(key=lambda x:x[0], reverse=True)
-                l = l[:num_spots]
-                list_proc = [(1, l[0][0], l[0][1])]
-                for i in range(1, len(l)):
-                    if l[i][0] == l[i - 1][0]:
-                        list_proc.append((list_proc[-1][0], l[i][0], l[i][1]))
-                    else:
-                        list_proc.append((list_proc[-1][0] + 1, l[i][0], l[i][1]))
-                leader_board_context[-1][1].append((t, list_proc))
-        if not leader_board_context[-1][0]:
-            leader_board_context.pop()
-            print("lbcp")
+                leader_board_context[-1][1].append(lb_proccess_list(l, num_spots, t))
+
     leader_board_context.append(('Workout Count Components', []))
     for ct in workout_type_counts:
         ct_list = []
@@ -327,8 +364,24 @@ def leaderboard_context(workout_types, workouts_to_consider, workout_type_counts
                 else:
                     ct_list_proc.append((ct_list_proc[-1][0] + 1, ct_list[i][0], ct_list[i][1]))
             leader_board_context[-1][1].append(('Total ' + str(ct), ct_list_proc))
+    leader_board_context.append(('Achievements', []))
+    num_ach_list = []
+    ach_pts_list = []
+    for user in User.objects.all():
+        try:
+            num_ach = user.profile.achievement_num
+            if num_ach > 0:
+                num_ach_list.append((num_ach, user))
+            ach_pts = user.profile.achievement_points
+            if ach_pts > 0:
+                ach_pts_list.append((ach_pts, user))
+        except:
+            pass
+    if num_ach_list:
+        leader_board_context[-1][1].append(lb_proccess_list(num_ach_list, num_spots, 'Number of Achievements'))
+    if ach_pts_list:
+        leader_board_context[-1][1].append(lb_proccess_list(ach_pts_list, num_spots, 'Total Achievement Points'))
     leader_board_context = [lbi for lbi in leader_board_context if lbi[1]]
-    print(leader_board_context)
     return leader_board_context
 
 def Leaderboard(request):
