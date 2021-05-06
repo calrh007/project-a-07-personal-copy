@@ -29,17 +29,36 @@ If you want to add a workout that you have completed, head on over to the "Add W
 If you do not see your workout within the dropdown menu, click on "Desired workout not available?" to learn more about how you can add a custom workout. 
 See all your workouts under "My Workouts" and a summary of all your workouts under "Workout Summaries".
 
-We built this project using Django + Bootstrap along with additional Python and Django packages:
-- gunicorn
-- django-heroku
-- django-allauth
-- django-measurement
-- django-crispy-forms
-- m26
-- Pillow
-- pgeocode
+## Used Packages & Citations
+
+We built this project using [Django](https://www.djangoproject.com) + [Bootstrap](https://getbootstrap.com) along with additional Python and Django packages:
+- [gunicorn](https://gunicorn.org)
+- [django-heroku](https://github.com/heroku/django-heroku)
+- [django-allauth](https://www.intenct.nl/projects/django-allauth/)
+- [django-measurement](django-measurement)
+- [django-crispy-forms](https://github.com/django-crispy-forms/django-crispy-forms)
+- [m26](https://pypi.org/project/m26/)
+- [Pillow](https://python-pillow.org)
+- [pgeocode](pgeocode)
 
 In addition to the packages listed above, we incorporated a weather API to gather the information on the weather on the day of each workout.  
-:link: Link to OpenWeather's API: https://openweathermap.org/api
+:link: https://openweathermap.org/api
 
-We modified a free HTML template as a home page: https://www.free-css.com/free-css-templates/page250/runner-onepage
+We modified a free HTML template as a home page: 
+:link: https://www.free-css.com/free-css-templates/page250/runner-onepage
+
+Code citations are included included at the beginning of the respective files in the following format:
+```
+/***************************************************************************************
+*  REFERENCES
+*  Title: <title of program/source code>
+*  Author: <author(s) names>
+*  Date: <date>
+*  Code version: <code version>
+*  URL: <where it's located>
+*  Software License: <license software is released under>
+*
+*  Title: ....
+*
+***************************************************************************************/
+```

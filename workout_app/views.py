@@ -1,3 +1,17 @@
+"""
+*  REFERENCES
+*  Title: m26 - calculations for sports like running, cycling, and swimming
+*  Author: Christopher Joakim
+*  Code version: 0.2.1
+*  URL: https://pypi.org/project/m26/
+*  Software License: MIT
+*
+*  Title: pgeocode
+*  Author: Roman Yurchak
+*  Code version: 0.3.0
+*  URL: https://pypi.org/project/pgeocode/
+*  Software License: BSD License (BSD)
+"""
 from django.shortcuts import render
 import requests
 from django.views import generic
