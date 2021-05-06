@@ -38,10 +38,9 @@ We built this project using [Django](https://www.djangoproject.com) + [Bootstrap
 - [django-measurement](django-measurement)
 - [django-crispy-forms](https://github.com/django-crispy-forms/django-crispy-forms)
 - [m26](https://pypi.org/project/m26/)
-- [Pillow](https://python-pillow.org)
 - [pgeocode](pgeocode)
 
-In addition to the packages listed above, we incorporated a weather API to gather the information on the weather on the day of each workout.  
+In addition to the packages listed above, we incorporated a weather API to gather information on the weather on the day of each workout.  
 :link: https://openweathermap.org/api
 
 We modified a free HTML template as a home page: 
