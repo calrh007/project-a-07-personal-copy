@@ -71,6 +71,7 @@ class ModularWorkoutLinkedForm(forms.ModelForm):
         self.fields['one_day'].widget = forms.HiddenInput()
         self.fields['end_date'].widget = forms.HiddenInput()
         self.order_fields(['zipcode', 'date_range'])
+        self.fields['zipcode'].help_text = "Please enter your zipcode to later view the weather on uploaded workouts."
         if not self.workout_type_inp.has_intensity:
             self.fields.pop('intensity')
         if not self.workout_type_inp.has_duration:
